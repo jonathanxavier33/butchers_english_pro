@@ -26,15 +26,21 @@
         }
         #game-screen { display: none; flex-direction: column; min-height: 100vh; }
         header { background: white; border-bottom: 1px solid #e2e8f0; padding: 16px; }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .header-title { font-size: 1rem; font-weight: 700; color: #991b1b; }
         .btn-home { background: #f1f5f9; border: none; font-size: 1.1rem; cursor: pointer; padding: 8px 12px; border-radius: 12px; }
-        .menu-scroll { display: flex; overflow-x: auto; padding: 12px 16px; gap: 8px; background: white; border-bottom: 1px solid #f1f5f9; white-space: nowrap; }
+        
+        .progress-bar-container { width: 100%; height: 8px; border-radius: 9999px; background: #e2e8f0; overflow: hidden; margin-top: 8px; }
+        .progress-bar-fill { height: 100%; background: #991b1b; border-radius: 9999px; width: 0%; transition: width 0.3s; }
+
+        .menu-scroll { display: flex; overflow-x: auto; padding: 10px 16px; gap: 8px; background: white; border-bottom: 1px solid #f1f5f9; white-space: nowrap; scrollbar-width: none; }
+        .menu-scroll::-webkit-scrollbar { display: none; }
         .menu-btn { 
             background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px 14px; border-radius: 9999px; 
             font-size: 0.8rem; font-weight: 600; color: #475569; cursor: pointer; flex-shrink: 0; 
         }
         .menu-btn.active { background: #991b1b; color: white; border-color: #991b1b; }
+
         main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 16px; }
         .game-area { 
             background: white; width: 100%; max-width: 420px; padding: 24px; border-radius: 24px; 
@@ -42,13 +48,18 @@
         }
         .flashcard { 
             min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; border-radius: 16px; padding: 20px; margin-bottom: 20px; background: #f8fafc; border: 2px solid #e2e8f0;
+            cursor: pointer; border-radius: 16px; padding: 20px; margin-bottom: 16px; background: #f8fafc; border: 2px solid #e2e8f0;
         }
         .card-word { font-size: 1.75rem; font-weight: 800; margin: 8px 0; color: #1e293b; }
-        .btn-action { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; margin-top: 10px; background: #991b1b; color: white; }
+        .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+        .quiz-btn { background: #f8fafc; border: 2px solid #e2e8f0; padding: 14px 10px; border-radius: 14px; cursor: pointer; font-weight: 600; font-size: 0.9rem; color: #334155; }
+        .quiz-btn.correct { background: #dcfce7; border-color: #22c55e; color: #166534; }
+        .quiz-btn.wrong { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+        
         .dict-search { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 0.95rem; margin-bottom: 12px; outline: none; }
         .dict-list { max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; text-align: left; }
         .dict-item { background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; font-size: 0.9rem; }
+        .btn-action { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; margin-top: 12px; background: #991b1b; color: white; }
     </style>
 </head>
 <body>
@@ -57,23 +68,34 @@
         <div style="font-size: 3.5rem; margin-bottom: 8px;">🥩</div>
         <h1>Butcher's English Pro</h1>
         <p class="subtitle">Vocabulaire Technique & Professionnel en Anglais</p>
-        <button class="btn-start" onclick="startApp()">Commencer l'entraînement</button>
+        <button class="btn-start" id="start-btn">Commencer l'entraînement</button>
     </div>
 
     <div id="game-screen">
         <header>
             <div class="header-top">
-                <button class="btn-home" onclick="goHome()">🏠 Accueil</button>
+                <button class="btn-home" id="home-btn">🏠 Accueil</button>
                 <span class="header-title">Butcher's English Pro</span>
                 <span id="xp-display" style="font-weight:700; color:#991b1b; font-size:0.85rem;">0 XP</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#64748b;">
+                <span id="lvl-name">Niveau 1 · Professionnel</span>
+                <span id="lvl-progress">0 / 30 XP</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progress-fill"></div>
             </div>
         </header>
 
         <nav class="menu-scroll" id="mode-menu">
-            <button class="menu-btn active" onclick="setMode('flashcards')">📚 Flashcards</button>
-            <button class="menu-btn" onclick="setMode('exam')">🎓 Examen</button>
-            <button class="menu-btn" onclick="setMode('dict')">📖 Dictionnaire</button>
+            <button class="menu-btn active" data-mode="flashcards">📚 Flashcards</button>
+            <button class="menu-btn" data-mode="quiz">✍️ Quiz</button>
+            <button class="menu-btn" data-mode="exam">🎓 Examen (10q)</button>
+            <button class="menu-btn" data-mode="roleplay">💬 Défis Vente</button>
+            <button class="menu-btn" data-mode="dict">📖 Dictionnaire</button>
         </nav>
+
+        <nav class="menu-scroll" id="theme-menu"></nav>
 
         <main>
             <div class="game-area" id="game-area"></div>
@@ -81,88 +103,305 @@
     </div>
 
     <script>
-        let xp = parseInt(localStorage.getItem('butcher_xp')) || 0;
-        let currentMode = 'flashcards';
-        let cardIdx = 0;
+        const DATABASE = {
+            "Viandes & Animaux": [
+                { fr: "Le bœuf", en: "Beef", ex: "Beef is popular for roast." },
+                { fr: "Le poulet", en: "Chicken", ex: "Free-range chicken." },
+                { fr: "L'agneau", en: "Lamb", ex: "Lamb chops are tasty." },
+                { fr: "Le porc", en: "Pork", ex: "Pork ribs for BBQ." },
+                { fr: "Le veau", en: "Veal", ex: "Veal escalope." }
+            ],
+            "Morceaux": [
+                { fr: "Le filet de bœuf", en: "Tenderloin", ex: "Beef tenderloin is very tender." },
+                { fr: "Le faux-filet", en: "Sirloin", ex: "Sirloin steak is flavorful." },
+                { fr: "L'entrecôte", en: "Ribeye", ex: "Ribeye steak is well marbled." },
+                { fr: "La côte de bœuf", en: "Prime rib", ex: "Prime rib for Sunday roast." }
+            ],
+            "Outils": [
+                { fr: "Le couteau de chef", en: "Chef's knife", ex: "Use a sharp chef's knife." },
+                { fr: "Le hachoir", en: "Cleaver", ex: "Use a cleaver for bones." },
+                { fr: "Le couteau à désosser", en: "Boning knife", ex: "Boning knife is flexible." },
+                { fr: "La scie à viande", en: "Butcher's saw", ex: "Cut with the butcher's saw." }
+            ],
+            "Cuissons & Grades": [
+                { fr: "Saignant", en: "Rare", ex: "I like my steak rare." },
+                { fr: "À point", en: "Medium rare", ex: "Medium rare, please." },
+                { fr: "Bien cuit", en: "Well done", ex: "A well done burger." }
+            ],
+            "Mesures & Poids": [
+                { fr: "Une livre (454g)", en: "Pound (lb)", ex: "Two pounds of ground beef." },
+                { fr: "Une once (28g)", en: "Ounce (oz)", ex: "Add 8 ounces of steak." },
+                { fr: "Le prix au kilo", en: "Price per kilo", ex: "What is the price per kilo?" }
+            ]
+        };
 
-        const VOCAB = [
-            { fr: "Le bœuf", en: "Beef" },
-            { fr: "Le poulet", en: "Chicken" },
-            { fr: "L'agneau", en: "Lamb" },
-            { fr: "Le faux-filet", en: "Sirloin" },
-            { fr: "L'entrecôte", en: "Ribeye" },
-            { fr: "Le couteau de chef", en: "Chef's knife" },
-            { fr: "Saignant", en: "Rare" },
-            { fr: "À point", en: "Medium rare" },
-            { fr: "Parer / Dégraisser", en: "Trim" },
-            { fr: "Une livre (454g)", en: "Pound (lb)" }
+        const ROLEPLAY = [
+            {
+                situation: "Un client anglophone souhaite acheter 2 livres de bœuf haché. Que dites-vous ?",
+                options: [
+                    { text: "Here is your ground beef, that will be 15 dollars.", correct: true },
+                    { text: "Where is the kitchen?", correct: false },
+                    { text: "I like rare steaks.", correct: false }
+                ]
+            },
+            {
+                situation: "Un client demande la cuisson de son entrecôte : 'How would you like your steak?'",
+                options: [
+                    { text: "Medium rare, please.", correct: true },
+                    { text: "Sanitize the counter.", correct: false },
+                    { text: "Two pounds of pork.", correct: false }
+                ]
+            }
         ];
 
-        function startApp() {
+        let state = {
+            xp: parseInt(localStorage.getItem('butcher_xp')) || 0,
+            mode: 'flashcards',
+            theme: 'Viandes & Animaux',
+            cardIdx: 0,
+            quizIdx: 0,
+            examIdx: 0,
+            examScore: 0,
+            roleplayIdx: 0,
+            isFlipped: false
+        };
+
+        // Initialisation des boutons principaux
+        document.getElementById('start-btn').addEventListener('click', () => {
             document.getElementById('home-screen').style.display = 'none';
             document.getElementById('game-screen').style.display = 'flex';
-            updateXP();
-            loadModule();
-        }
+            initThemes();
+            updateUI();
+            render();
+        });
 
-        function goHome() {
+        document.getElementById('home-btn').addEventListener('click', () => {
             document.getElementById('game-screen').style.display = 'none';
             document.getElementById('home-screen').style.display = 'flex';
+        });
+
+        // Gestion des menus de mode
+        document.querySelectorAll('#mode-menu .menu-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('#mode-menu .menu-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                state.mode = e.target.getAttribute('data-mode');
+                state.cardIdx = 0;
+                state.quizIdx = 0;
+                state.examIdx = 0;
+                state.examScore = 0;
+                state.roleplayIdx = 0;
+                render();
+            });
+        });
+
+        function initThemes() {
+            const themeMenu = document.getElementById('theme-menu');
+            themeMenu.innerHTML = Object.keys(DATABASE).map(t => 
+                `<button class="menu-btn ${t === state.theme ? 'active' : ''}" data-theme="${t}">${t}</button>`
+            ).join('');
+
+            themeMenu.querySelectorAll('.menu-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    themeMenu.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    state.theme = e.target.getAttribute('data-theme');
+                    state.cardIdx = 0;
+                    state.quizIdx = 0;
+                    render();
+                });
+            });
         }
 
-        function updateXP() {
-            document.getElementById('xp-display').textContent = xp + " XP";
-            localStorage.setItem('butcher_xp', xp);
+        function addXP(amount) {
+            state.xp += amount;
+            localStorage.setItem('butcher_xp', state.xp);
+            updateUI();
         }
 
-        function setMode(mode) {
-            currentMode = mode;
-            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            loadModule();
+        function updateUI() {
+            document.getElementById('xp-display').textContent = state.xp + " XP";
+            let lvl = Math.floor(state.xp / 30) + 1;
+            let prog = state.xp % 30;
+            document.getElementById('lvl-name').textContent = `Niveau ${lvl} · Professionnel`;
+            document.getElementById('lvl-progress').textContent = `${prog} / 30 XP`;
+            document.getElementById('progress-fill').style.width = `${(prog / 30) * 100}%`;
         }
 
-        function loadModule() {
+        function render() {
             const area = document.getElementById('game-area');
-            if (currentMode === 'flashcards') {
-                const item = VOCAB[cardIdx];
+            const themeData = DATABASE[state.theme];
+
+            if (state.mode === 'flashcards') {
+                const item = themeData[state.cardIdx];
                 area.innerHTML = `
-                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px;">FLASHCARD</div>
-                    <div class="flashcard" onclick="this.innerHTML = '<div style=\\'font-size:0.75rem; color:#991b1b; font-weight:700;\\'>ANGLAIS</div><div class=\\'card-word\\' style=\\'color:#991b1b;\\'>${item.en}</div>';">
-                        <div style="font-size:0.75rem; color:#64748b; font-weight:700;">FRANÇAIS</div>
-                        <div class="card-word">${item.fr}</div>
-                        <div style="font-size:0.75rem; color:#94a3b8; margin-top:8px;">👆 Touchez pour retourner</div>
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px; text-transform:uppercase;">${state.theme}</div>
+                    <div class="flashcard" id="card-box">
+                        <div style="font-size:0.75rem; color:#94a3b8; font-weight:700;">${state.isFlipped ? 'ANGLAIS (ENGLISH)' : 'FRANÇAIS'}</div>
+                        <div class="card-word" style="color: ${state.isFlipped ? '#991b1b' : '#1e293b'}">${state.isFlipped ? item.en : item.fr}</div>
+                        ${state.isFlipped ? `<div style="font-style:italic; color:#64748b; font-size:0.85rem; margin-top:8px;">"${item.ex}"</div>` : ''}
+                        <div style="font-size:0.75rem; color:#94a3b8; margin-top:12px;">👆 Touchez pour retourner</div>
                     </div>
-                    <button class="btn-action" onclick="nextCard()">Suivant ➡️</button>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-action" id="prev-card" style="background:#e2e8f0; color:#334155;">⬅️ Précédent</button>
+                        <button class="btn-action" id="next-card">Suivant ➡️</button>
+                    </div>
                 `;
-            } else if (currentMode === 'dict') {
+
+                document.getElementById('card-box').addEventListener('click', () => {
+                    state.isFlipped = !state.isFlipped;
+                    render();
+                });
+
+                document.getElementById('next-card').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    state.cardIdx = (state.cardIdx + 1) % themeData.length;
+                    state.isFlipped = false;
+                    addXP(1);
+                    render();
+                });
+
+                document.getElementById('prev-card').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    state.cardIdx = (state.cardIdx - 1 + themeData.length) % themeData.length;
+                    state.isFlipped = false;
+                    render();
+                });
+
+            } else if (state.mode === 'quiz') {
+                const item = themeData[state.quizIdx % themeData.length];
+                let opts = [item.en];
+                while(opts.length < 4) {
+                    let rand = themeData[Math.floor(Math.random() * themeData.length)].en;
+                    if(!opts.includes(rand)) opts.push(rand);
+                }
+                opts.sort(() => Math.random() - 0.5);
+
                 area.innerHTML = `
-                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px;">DICTIONNAIRE</div>
-                    <input type="text" class="dict-search" placeholder="Rechercher un mot..." oninput="filterDict(this.value)">
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:12px;">QUIZ TRADUCTION</div>
+                    <div class="card-word" style="font-size:1.5rem; margin-bottom:20px;">${item.fr}</div>
+                    <div class="quiz-options">
+                        ${opts.map(o => `<button class="quiz-btn" data-val="${o}">${o}</button>`).join('')}
+                    </div>
+                    <div id="quiz-fb" style="margin-top:12px; font-weight:600;"></div>
+                `;
+
+                area.querySelectorAll('.quiz-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const val = e.target.getAttribute('data-val');
+                        const fb = document.getElementById('quiz-fb');
+                        area.querySelectorAll('.quiz-btn').forEach(b => b.disabled = true);
+                        if(val === item.en) {
+                            e.target.classList.add('correct');
+                            fb.innerHTML = `<span style="color:#166534;">✨ Excellent ! +2 XP</span>`;
+                            addXP(2);
+                        } else {
+                            e.target.classList.add('wrong');
+                            fb.innerHTML = `<span style="color:#991b1b;">❌ Erreur. C'était : ${item.en}</span>`;
+                        }
+                        setTimeout(() => {
+                            state.quizIdx++;
+                            render();
+                        }, 1400);
+                    });
+                });
+
+            } else if (state.mode === 'exam') {
+                let allItems = Object.values(DATABASE).flat();
+                if(state.examIdx >= 5) {
+                    let grade = (state.examScore / 5) * 20;
+                    area.innerHTML = `
+                        <h2>🎓 Bilan de l'Examen</h2>
+                        <p style="font-size:2rem; font-weight:800; color:#991b1b; margin:16px 0;">${grade} / 20</p>
+                        <p style="color:#64748b; margin-bottom:20px;">(${state.examScore} bonnes réponses sur 5)</p>
+                        <button class="btn-action" id="restart-exam">Recommencer l'examen</button>
+                    `;
+                    document.getElementById('restart-exam').addEventListener('click', () => {
+                        state.examIdx = 0;
+                        state.examScore = 0;
+                        render();
+                    });
+                    return;
+                }
+
+                let currentQ = allItems[state.examIdx];
+                let opts = [currentQ.en];
+                while(opts.length < 4) {
+                    let rand = allItems[Math.floor(Math.random() * allItems.length)].en;
+                    if(!opts.includes(rand)) opts.push(rand);
+                }
+                opts.sort(() => Math.random() - 0.5);
+
+                area.innerHTML = `
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px;">EXAMEN (${state.examIdx + 1}/5)</div>
+                    <div class="card-word" style="font-size:1.4rem; margin-bottom:20px;">${currentQ.fr}</div>
+                    <div class="quiz-options">
+                        ${opts.map(o => `<button class="quiz-btn" data-val="${o}">${o}</button>`).join('')}
+                    </div>
+                `;
+
+                area.querySelectorAll('.quiz-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        if(e.target.getAttribute('data-val') === currentQ.en) state.examScore++;
+                        state.examIdx++;
+                        render();
+                    });
+                });
+
+            } else if (state.mode === 'roleplay') {
+                const sc = ROLEPLAY[state.roleplayIdx % ROLEPLAY.length];
+                let shuffledOpts = [...sc.options].sort(() => Math.random() - 0.5);
+
+                area.innerHTML = `
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px;">DÉFIS VENTE CLIENT</div>
+                    <div style="background:#fffbeb; border:1px solid #fde68a; padding:12px; border-radius:12px; font-size:0.85rem; color:#78350f; margin-bottom:14px; text-align:left;">
+                        💬 <b>Situation :</b><br>${sc.situation}
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:8px;" id="roleplay-opts">
+                        ${shuffledOpts.map(o => `<button class="quiz-btn" style="width:100%; text-align:left;" data-correct="${o.correct}">${o.text}</button>`).join('')}
+                    </div>
+                    <div id="rp-fb" style="margin-top:10px; font-weight:600;"></div>
+                `;
+
+                area.querySelectorAll('#roleplay-opts .quiz-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const isCorrect = e.target.getAttribute('data-correct') === 'true';
+                        const fb = document.getElementById('rp-fb');
+                        if(isCorrect) {
+                            e.target.style.background = '#dcfce7';
+                            e.target.style.borderColor = '#22c55e';
+                            fb.innerHTML = `<span style="color:#166534;">✨ Bonne formule ! +3 XP</span>`;
+                            addXP(3);
+                        } else {
+                            e.target.style.background = '#fee2e2';
+                            e.target.style.borderColor = '#ef4444';
+                            fb.innerHTML = `<span style="color:#991b1b;">❌ Ce n'est pas la bonne réponse.</span>`;
+                        }
+                        setTimeout(() => {
+                            state.roleplayIdx++;
+                            render();
+                        }, 1600);
+                    });
+                });
+
+            } else if (state.mode === 'dict') {
+                let allItems = Object.values(DATABASE).flat();
+                area.innerHTML = `
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px;">DICTIONNAIRE TECHNIQUE</div>
+                    <input type="text" class="dict-search" id="dict-input" placeholder="Rechercher un mot (FR ou EN)...">
                     <div class="dict-list" id="dict-box">
-                        ${VOCAB.map(i => `<div class="dict-item"><span><b>${i.fr}</b></span><span style="color:#991b1b;">${i.en}</span></div>`).join('')}
+                        ${allItems.map(i => `<div class="dict-item"><span><b>${i.fr}</b></span><span style="color:#991b1b; font-weight:700;">${i.en}</span></div>`).join('')}
                     </div>
                 `;
-            } else if (currentMode === 'exam') {
-                area.innerHTML = `
-                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px;">MODE EXAMEN</div>
-                    <p style="font-weight:600; margin:20px 0;">Traduction de : <b>${VOCAB[0].fr}</b></p>
-                    <button class="btn-action" onclick="alert('Bonne réponse ! +5 XP'); xp+=5; updateXP();"> ${VOCAB[0].en} </button>
-                `;
+
+                document.getElementById('dict-input').addEventListener('input', (e) => {
+                    const q = e.target.value.toLowerCase();
+                    const filtered = allItems.filter(i => i.fr.toLowerCase().includes(q) || i.en.toLowerCase().includes(q));
+                    document.getElementById('dict-box').innerHTML = filtered.map(i => `
+                        <div class="dict-item"><span><b>${i.fr}</b></span><span style="color:#991b1b; font-weight:700;">${i.en}</span></div>
+                    `).join('');
+                });
             }
-        }
-
-        function nextCard() {
-            cardIdx = (cardIdx + 1) % VOCAB.length;
-            xp += 1;
-            updateXP();
-            loadModule();
-        }
-
-        function filterDict(query) {
-            const box = document.getElementById('dict-box');
-            const filtered = VOCAB.filter(i => i.fr.toLowerCase().includes(query.toLowerCase()) || i.en.toLowerCase().includes(query.toLowerCase()));
-            box.innerHTML = filtered.map(i => `<div class="dict-item"><span><b>${i.fr}</b></span><span style="color:#991b1b;">${i.en}</span></div>`).join('');
         }
     </script>
 </body>
