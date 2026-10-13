@@ -19,7 +19,9 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; text-align: center; 
         }
         #home-screen h1 { font-size: 2rem; color: #991b1b; margin-bottom: 6px; font-weight: 800; }
-        .subtitle { color: #64748b; margin-bottom: 24px; font-size: 0.95rem; }
+        .subtitle { color: #64748b; margin-bottom: 24px; font-size: 0.95rem; font-weight: 500; }
+        .image-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 320px; margin-bottom: 24px; }
+        .image-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
         .btn-start { 
             background: linear-gradient(135deg, #991b1b, #dc2626); color: white; border: none; padding: 16px 36px; 
             font-size: 1.05rem; border-radius: 9999px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(153, 27, 27, 0.3);
@@ -56,6 +58,14 @@
         .quiz-btn.correct { background: #dcfce7; border-color: #22c55e; color: #166534; }
         .quiz-btn.wrong { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
         
+        .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+        .match-card {
+            background: #f8fafc; border: 2px solid #e2e8f0; padding: 12px 8px; border-radius: 12px;
+            font-size: 0.8rem; font-weight: 600; text-align: center; cursor: pointer; color: #334155;
+        }
+        .match-card.selected { background: #fee2e2; border-color: #991b1b; color: #991b1b; }
+        .match-card.matched { background: #dcfce7; border-color: #22c55e; color: #166534; opacity: 0.6; pointer-events: none; }
+
         .dict-search { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 0.95rem; margin-bottom: 12px; outline: none; }
         .dict-list { max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; text-align: left; }
         .dict-item { background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; font-size: 0.9rem; }
@@ -68,7 +78,14 @@
         <div style="font-size: 3.5rem; margin-bottom: 8px;">🥩</div>
         <h1>Butcher's English Pro</h1>
         <p class="subtitle">Vocabulaire Technique & Professionnel en Anglais</p>
+        
+        <div class="image-grid">
+            <img src="https://images.unsplash.com/photo-1588347818036-558601350947?w=400&q=80" alt="Boucherie">
+            <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80" alt="Viande">
+        </div>
+        
         <button class="btn-start" id="start-btn">Commencer l'entraînement</button>
+        <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 24px;">📱 Données sauvegardées automatiquement sur votre appareil</p>
     </div>
 
     <div id="game-screen">
@@ -90,6 +107,7 @@
         <nav class="menu-scroll" id="mode-menu">
             <button class="menu-btn active" data-mode="flashcards">📚 Flashcards</button>
             <button class="menu-btn" data-mode="quiz">✍️ Quiz</button>
+            <button class="menu-btn" data-mode="matching">🔗 Appariement</button>
             <button class="menu-btn" data-mode="exam">🎓 Examen (10q)</button>
             <button class="menu-btn" data-mode="roleplay">💬 Défis Vente</button>
             <button class="menu-btn" data-mode="dict">📖 Dictionnaire</button>
@@ -109,31 +127,87 @@
                 { fr: "Le poulet", en: "Chicken", ex: "Free-range chicken." },
                 { fr: "L'agneau", en: "Lamb", ex: "Lamb chops are tasty." },
                 { fr: "Le porc", en: "Pork", ex: "Pork ribs for BBQ." },
-                { fr: "Le veau", en: "Veal", ex: "Veal escalope." }
+                { fr: "Le veau", en: "Veal", ex: "Veal escalope." },
+                { fr: "La dinde", en: "Turkey", ex: "Whole turkey for Christmas." },
+                { fr: "Le canard", en: "Duck", ex: "Duck breast is delicious." },
+                { fr: "Le gibier", en: "Game", ex: "Wild game season in autumn." },
+                { fr: "Le sanglier", en: "Wild boar", ex: "Wild boar stew." },
+                { fr: "Le chevreuil", en: "Venison", ex: "Venison roast." },
+                { fr: "Le lapin", en: "Rabbit", ex: "Rabbit with mustard." },
+                { fr: "L'abats", en: "Offal", ex: "Fresh offal display." },
+                { fr: "Le foie", en: "Liver", ex: "Calf's liver." },
+                { fr: "Les rognons", en: "Kidneys", ex: "Lamb kidneys." },
+                { fr: "Le ris de veau", en: "Sweetbreads", ex: "Crispy sweetbreads." }
             ],
             "Morceaux": [
                 { fr: "Le filet de bœuf", en: "Tenderloin", ex: "Beef tenderloin is very tender." },
                 { fr: "Le faux-filet", en: "Sirloin", ex: "Sirloin steak is flavorful." },
                 { fr: "L'entrecôte", en: "Ribeye", ex: "Ribeye steak is well marbled." },
-                { fr: "La côte de bœuf", en: "Prime rib", ex: "Prime rib for Sunday roast." }
+                { fr: "La côte de bœuf", en: "Prime rib", ex: "Prime rib for Sunday roast." },
+                { fr: "Le rumsteck", en: "Rump steak", ex: "Lean rump steak." },
+                { fr: "Le paleron", en: "Chuck steak", ex: "Chuck steak for braising." },
+                { fr: "Le bourguignon", en: "Stew beef", ex: "Cubes of stew beef." },
+                { fr: "Le jarret", en: "Shin / Shank", ex: "Beef shank for osso buco." },
+                { fr: "La poitrine", en: "Brisket", ex: "Smoked beef brisket." },
+                { fr: "Le carré d'agneau", en: "Rack of lamb", ex: "Roasted rack of lamb." },
+                { fr: "La côtelette de porc", en: "Pork chop", ex: "Juicy pork chop." },
+                { fr: "Le filet mignon", en: "Pork tenderloin", ex: "Pork tenderloin medallions." },
+                { fr: "L'épaule", en: "Shoulder", ex: "Shoulder of lamb." },
+                { fr: "Le gigot d'agneau", en: "Leg of lamb", ex: "Traditional leg of lamb." },
+                { fr: "La bavette", en: "Flank steak", ex: "Flank steak with shallots." }
             ],
             "Outils": [
                 { fr: "Le couteau de chef", en: "Chef's knife", ex: "Use a sharp chef's knife." },
                 { fr: "Le hachoir", en: "Cleaver", ex: "Use a cleaver for bones." },
                 { fr: "Le couteau à désosser", en: "Boning knife", ex: "Boning knife is flexible." },
-                { fr: "La scie à viande", en: "Butcher's saw", ex: "Cut with the butcher's saw." }
+                { fr: "La scie à viande", en: "Butcher's saw", ex: "Cut with the butcher's saw." },
+                { fr: "Le fusil à aiguiser", en: "Sharpening steel", ex: "Hone the blade on the steel." },
+                { fr: "Le billot", en: "Butcher's block", ex: "Clean the wooden block." },
+                { fr: "La trancheuse", en: "Slicer", ex: "Electric meat slicer." },
+                { fr: "Le hachoir à viande", en: "Meat grinder", ex: "Grind fresh beef." },
+                { fr: "La ficelle de boucher", en: "Butcher's twine", ex: "Tie the roast securely." },
+                { fr: "Le crochet de boucher", en: "Meat hook", ex: "Hang the carcass on the hook." },
+                { fr: "La balance", en: "Scale", ex: "Weigh the meat on the scale." },
+                { fr: "Le papier sulfurisé", en: "Butcher paper", ex: "Wrap the meat in paper." }
             ],
             "Cuissons & Grades": [
                 { fr: "Saignant", en: "Rare", ex: "I like my steak rare." },
                 { fr: "À point", en: "Medium rare", ex: "Medium rare, please." },
-                { fr: "Bien cuit", en: "Well done", ex: "A well done burger." }
+                { fr: "Bien cuit", en: "Well done", ex: "A well done burger." },
+                { fr: "Bleu", en: "Blue / Very rare", ex: "Blue steak seared quickly." },
+                { fr: "À point (tendre)", en: "Medium", ex: "Medium cooked ribeye." },
+                { fr: "Rôti au four", en: "Roasted", ex: "Roasted leg of lamb." },
+                { fr: "Braisé", en: "Braised", ex: "Braised beef is tender." },
+                { fr: "Grillé", en: "Grilled", ex: "Grilled pork chops." },
+                { fr: "Fumé", en: "Smoked", ex: "Smoked bacon." },
+                { fr: "Persillé (persillage)", en: "Marbled (marbling)", ex: "High marbling score." }
+            ],
+            "Hygiène & Sécurité": [
+                { fr: "Nettoyer / Désinfecter", en: "Sanitize", ex: "Sanitize the cutting board." },
+                { fr: "La chaîne du froid", en: "Cold chain", ex: "Keep track of the cold chain." },
+                { fr: "Le tablier", en: "Apron", ex: "Wear a clean apron." },
+                { fr: "Les gants de protection", en: "Safety gloves", ex: "Use safety gloves." },
+                { fr: "La température", en: "Temperature", ex: "Check the fridge temperature." },
+                { fr: "La traçabilité", en: "Traceability", ex: "Check the meat traceability label." },
+                { fr: "La chambre froide", en: "Walk-in cooler", ex: "Store meat in the walk-in cooler." },
+                { fr: "La date limite de consommation", en: "Use-by date", ex: "Check the use-by date." }
             ],
             "Mesures & Poids": [
                 { fr: "Une livre (454g)", en: "Pound (lb)", ex: "Two pounds of ground beef." },
                 { fr: "Une once (28g)", en: "Ounce (oz)", ex: "Add 8 ounces of steak." },
-                { fr: "Le prix au kilo", en: "Price per kilo", ex: "What is the price per kilo?" }
+                { fr: "Le prix au kilo", en: "Price per kilo", ex: "What is the price per kilo?" },
+                { fr: "Le poids net", en: "Net weight", ex: "Check the net weight on the label." },
+                { fr: "Le gramme", en: "Gram", ex: "500 grams of minced meat." },
+                { fr: "Le kilogramme", en: "Kilogram", ex: "Three kilograms of pork ribs." }
             ]
         };
+
+        const MATCHING_PAIRS = [
+            { animal: "Beef (Bœuf)", part: "Ribeye (Entrecôte)" },
+            { animal: "Pork (Porc)", part: "Pork Chop (Côtelette)" },
+            { animal: "Lamb (Agneau)", part: "Rack of Lamb (Carré)" },
+            { animal: "Chicken (Poulet)", part: "Chicken Breast (Blanc)" }
+        ];
 
         const ROLEPLAY = [
             {
@@ -163,10 +237,10 @@
             examIdx: 0,
             examScore: 0,
             roleplayIdx: 0,
+            selectedAnimal: null,
             isFlipped: false
         };
 
-        // Initialisation des boutons principaux
         document.getElementById('start-btn').addEventListener('click', () => {
             document.getElementById('home-screen').style.display = 'none';
             document.getElementById('game-screen').style.display = 'flex';
@@ -180,7 +254,6 @@
             document.getElementById('home-screen').style.display = 'flex';
         });
 
-        // Gestion des menus de mode
         document.querySelectorAll('#mode-menu .menu-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 document.querySelectorAll('#mode-menu .menu-btn').forEach(b => b.classList.remove('active'));
@@ -191,6 +264,7 @@
                 state.examIdx = 0;
                 state.examScore = 0;
                 state.roleplayIdx = 0;
+                state.selectedAnimal = null;
                 render();
             });
         });
@@ -235,7 +309,7 @@
             if (state.mode === 'flashcards') {
                 const item = themeData[state.cardIdx];
                 area.innerHTML = `
-                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px; text-transform:uppercase;">${state.theme}</div>
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px; text-transform:uppercase;">${state.theme} (${state.cardIdx + 1}/${themeData.length})</div>
                     <div class="flashcard" id="card-box">
                         <div style="font-size:0.75rem; color:#94a3b8; font-weight:700;">${state.isFlipped ? 'ANGLAIS (ENGLISH)' : 'FRANÇAIS'}</div>
                         <div class="card-word" style="color: ${state.isFlipped ? '#991b1b' : '#1e293b'}">${state.isFlipped ? item.en : item.fr}</div>
@@ -306,14 +380,67 @@
                     });
                 });
 
+            } else if (state.mode === 'matching') {
+                let animals = MATCHING_PAIRS.map(p => p.animal).sort(() => Math.random() - 0.5);
+                let parts = MATCHING_PAIRS.map(p => p.part).sort(() => Math.random() - 0.5);
+
+                area.innerHTML = `
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px;">APPARIEMENT : ANIMAL & MORCEAU</div>
+                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:12px;">Associez chaque animal à son morceau :</p>
+                    <div class="match-grid">
+                        <div>
+                            <div style="font-size:0.7rem; font-weight:700; color:#991b1b; margin-bottom:6px;">ANIMAUX</div>
+                            ${animals.map(a => `<div class="match-card animal-card" data-val="${a}">${a}</div>`).join('')}
+                        </div>
+                        <div>
+                            <div style="font-size:0.7rem; font-weight:700; color:#991b1b; margin-bottom:6px;">MORCEAUX</div>
+                            ${parts.map(p => `<div class="match-card part-card" data-val="${p}">${p}</div>`).join('')}
+                        </div>
+                    </div>
+                    <div id="match-fb" style="font-weight:600; font-size:0.85rem; margin-top:8px;"></div>
+                `;
+
+                let selectedAnimal = null;
+                area.querySelectorAll('.animal-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        area.querySelectorAll('.animal-card').forEach(c => c.classList.remove('selected'));
+                        e.target.classList.add('selected');
+                        selectedAnimal = e.target.getAttribute('data-val');
+                    });
+                });
+
+                area.querySelectorAll('.part-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        if(!selectedAnimal) {
+                            alert("Sélectionnez d'abord un animal à gauche !");
+                            return;
+                        }
+                        const part = e.target.getAttribute('data-val');
+                        const isValid = MATCHING_PAIRS.some(p => p.animal === selectedAnimal && p.part === part);
+                        const fb = document.getElementById('match-fb');
+
+                        if(isValid) {
+                            e.target.classList.add('matched');
+                            area.querySelectorAll('.animal-card').forEach(c => {
+                                if(c.getAttribute('data-val') === selectedAnimal) c.classList.add('matched');
+                            });
+                            fb.innerHTML = `<span style="color:#166534;">✨ Bonne association ! +2 XP</span>`;
+                            addXP(2);
+                            selectedAnimal = null;
+                        } else {
+                            fb.innerHTML = `<span style="color:#991b1b;">❌ Mauvaise association, réessayez.</span>`;
+                        }
+                    });
+                });
+
             } else if (state.mode === 'exam') {
                 let allItems = Object.values(DATABASE).flat();
-                if(state.examIdx >= 5) {
-                    let grade = (state.examScore / 5) * 20;
+                if(state.examIdx >= 10) {
+                    let grade = (state.examScore / 10) * 20;
                     area.innerHTML = `
                         <h2>🎓 Bilan de l'Examen</h2>
                         <p style="font-size:2rem; font-weight:800; color:#991b1b; margin:16px 0;">${grade} / 20</p>
-                        <p style="color:#64748b; margin-bottom:20px;">(${state.examScore} bonnes réponses sur 5)</p>
+                        <p style="color:#64748b; margin-bottom:20px;">(${state.examScore} bonnes réponses sur 10)</p>
                         <button class="btn-action" id="restart-exam">Recommencer l'examen</button>
                     `;
                     document.getElementById('restart-exam').addEventListener('click', () => {
@@ -324,7 +451,7 @@
                     return;
                 }
 
-                let currentQ = allItems[state.examIdx];
+                let currentQ = allItems[state.examIdx % allItems.length];
                 let opts = [currentQ.en];
                 while(opts.length < 4) {
                     let rand = allItems[Math.floor(Math.random() * allItems.length)].en;
@@ -333,7 +460,7 @@
                 opts.sort(() => Math.random() - 0.5);
 
                 area.innerHTML = `
-                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px;">EXAMEN (${state.examIdx + 1}/5)</div>
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px;">EXAMEN (${state.examIdx + 1}/10)</div>
                     <div class="card-word" style="font-size:1.4rem; margin-bottom:20px;">${currentQ.fr}</div>
                     <div class="quiz-options">
                         ${opts.map(o => `<button class="quiz-btn" data-val="${o}">${o}</button>`).join('')}
