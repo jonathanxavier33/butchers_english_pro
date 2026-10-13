@@ -5,481 +5,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Butcher English">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#8B0000">
-    <meta name="format-detection" content="telephone=no">
     <title>Butcher's English Pro</title>
     
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥩</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥩</text></svg>">
     
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { 
-            touch-action: manipulation;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-        }
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; 
-            background: linear-gradient(180deg, #fef3c7 0%, #fde68a 100%);
-            margin: 0; 
-            padding: 0; 
-            min-height: 100vh;
-            min-height: -webkit-fill-available;
-            color: #333; 
-            overflow-x: hidden;
+            background: #f8fafc; margin: 0; padding: 0; min-height: 100vh; color: #1e293b; 
         }
-
-        /* ACCUEIL */
         #home-screen { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            min-height: 100vh;
-            min-height: -webkit-fill-available;
-            padding: 20px; 
-            padding-top: env(safe-area-inset-top, 20px);
-            padding-bottom: env(safe-area-inset-bottom, 20px);
-            text-align: center; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; text-align: center; 
         }
-        #home-screen h1 { font-size: 1.8rem; color: #8B0000; margin-bottom: 8px; }
-        .subtitle { color: #666; margin-bottom: 24px; }
+        #home-screen h1 { font-size: 2rem; color: #991b1b; margin-bottom: 6px; font-weight: 800; }
+        .subtitle { color: #64748b; margin-bottom: 24px; font-size: 0.95rem; font-weight: 500; }
         .image-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 320px; margin-bottom: 24px; }
-        .image-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 16px; }
+        .image-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
         .btn-start { 
-            background: linear-gradient(135deg, #8B0000, #B91C1C); 
-            color: white; 
-            border: none; 
-            padding: 16px 40px; 
-            font-size: 1.1rem; 
-            border-radius: 30px; 
-            font-weight: bold; 
-            cursor: pointer;
-            -webkit-appearance: none;
-            appearance: none;
+            background: linear-gradient(135deg, #991b1b, #dc2626); color: white; border: none; padding: 16px 36px; 
+            font-size: 1.05rem; border-radius: 9999px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(153, 27, 27, 0.3);
         }
-        .btn-start:active { transform: scale(0.95); }
-
-        /* JEU */
-        #game-screen { display: none; flex-direction: column; min-height: 100vh; min-height: -webkit-fill-available; }
+        #game-screen { display: none; flex-direction: column; min-height: 100vh; }
+        header { background: white; border-bottom: 1px solid #e2e8f0; padding: 16px; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .header-title { font-size: 1rem; font-weight: 700; color: #991b1b; }
+        .btn-home { background: #f1f5f9; border: none; font-size: 1.1rem; cursor: pointer; padding: 8px 12px; border-radius: 12px; }
         
-        header { background: white; border-bottom: 1px solid #E5E7EB; padding: 12px 16px; padding-top: max(12px, env(safe-area-inset-top)); }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .header-title { font-size: 1rem; font-weight: bold; color: #8B0000; }
-        .btn-home { background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 8px; -webkit-appearance: none; }
+        .progress-bar-container { width: 100%; height: 8px; border-radius: 9999px; background: #e2e8f0; overflow: hidden; margin-top: 8px; }
+        .progress-bar-fill { height: 100%; background: #991b1b; border-radius: 9999px; width: 0%; transition: width 0.3s; }
 
-        /* Progression améliorée avec noms */
-        .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .level-info { display: flex; align-items: center; gap: 8px; }
-        .level-icon { font-size: 1.5rem; }
-        .level-name { font-weight: bold; font-size: 0.85rem; color: #92400E; }
-        .xp-count { font-weight: bold; color: #92400E; font-size: 0.9rem; }
-
-        .progress-bar-container { 
-            width: 100%; 
-            height: 28px; 
-            border-radius: 10px; 
-            background: linear-gradient(90deg, #FEF3C7, #FDE68A);
-            border: 2px solid #F59E0B;
-            overflow: hidden;
-            position: relative;
-        }
-        .progress-bar-fill { 
-            height: 100%; 
-            background: linear-gradient(90deg, #991B1B, #DC2626);
-            transition: width 0.5s;
-            position: relative;
-        }
-        .progress-knife {
-            position: absolute;
-            top: 2px;
-            right: -16px;
-            transform: translateX(-100%);
-            transition: left 0.5s;
-        }
-        
-        /* NOUVEAU: Labels des niveaux sur la barre de progression */
-        .level-labels { 
-            display: flex; 
-            justify-content: space-between; 
-            margin-top: 6px;
-            padding: 0 2px;
-        }
-        .level-label { 
-            font-size: 0.6rem; 
-            color: #9CA3AF;
-            text-align: center;
-            flex: 1;
-            transition: all 0.3s;
-        }
-        .level-label.current { 
-            color: #8B0000; 
-            font-weight: bold;
-            font-size: 0.7rem;
-        }
-        .level-label.passed { color: #991B1B; }
-        
-        .level-dots { display: flex; justify-content: space-between; margin-top: 8px; }
-        .level-dot { 
-            width: 28px; height: 28px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.8rem;
-            background: #E5E7EB;
-        }
-        .level-dot.passed { background: linear-gradient(135deg, #991B1B, #DC2626); }
-
-        /* Menus */
-        .menu-scroll { display: flex; overflow-x: auto; padding: 10px 16px; gap: 8px; background: white; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+        .menu-scroll { display: flex; overflow-x: auto; padding: 10px 16px; gap: 8px; background: white; border-bottom: 1px solid #f1f5f9; white-space: nowrap; scrollbar-width: none; }
+        .menu-scroll::-webkit-scrollbar { display: none; }
         .menu-btn { 
-            background: #F3F4F6; 
-            border: 2px solid #E5E7EB; 
-            padding: 8px 14px; 
-            border-radius: 20px; 
-            font-size: 0.8rem; 
-            font-weight: 600; 
-            cursor: pointer;
-            -webkit-appearance: none;
-            appearance: none;
-            flex-shrink: 0;
+            background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px 14px; border-radius: 9999px; 
+            font-size: 0.8rem; font-weight: 600; color: #475569; cursor: pointer; flex-shrink: 0; 
         }
-        .menu-btn.active { background: #8B0000; color: white; border-color: #8B0000; }
+        .menu-btn.active { background: #991b1b; color: white; border-color: #991b1b; }
 
-        /* Zone de jeu */
-        main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 16px; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+        main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 16px; }
         .game-area { 
-            background: white; 
-            width: 100%; 
-            max-width: 400px; 
-            padding: 20px; 
-            border-radius: 20px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            min-height: 300px;
+            background: white; width: 100%; max-width: 420px; padding: 24px; border-radius: 24px; 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9; text-align: center;
         }
-
-        /* NOUVEAU: Compteur de cartes amélioré */
-        .card-counter {
-            background: linear-gradient(135deg, #FEF3C7, #FDE68A);
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #92400E;
-            display: inline-block;
-            margin-bottom: 12px;
-        }
-        
-        /* NOUVEAU: Numéro de quiz amélioré */
-        .quiz-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        .quiz-number {
-            background: #8B0000;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-        .quiz-theme {
-            font-size: 0.75rem;
-            color: #6B7280;
-        }
-
-        /* Flashcard */
         .flashcard { 
-            min-height: 240px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center;
-            cursor: pointer;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
+            min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; border-radius: 16px; padding: 20px; margin-bottom: 16px; background: #f8fafc; border: 2px solid #e2e8f0;
         }
-        .flashcard-front { background: #F9FAFB; border: 2px solid #E5E7EB; }
-        .flashcard-back { background: linear-gradient(135deg, #FEF2F2, #FEF3C7); border: 2px solid #FECACA; }
-        .card-label { font-size: 0.7rem; text-transform: uppercase; color: #9CA3AF; margin-bottom: 8px; }
-        .card-word { font-size: 1.8rem; font-weight: 800; margin: 8px 0; }
-        .flashcard-front .card-word { color: #1F2937; }
-        .flashcard-back .card-word { color: #991B1B; }
-        .card-example { font-style: italic; color: #6B7280; font-size: 0.9rem; margin-top: 8px; }
-        .card-hint { font-size: 0.75rem; color: #9CA3AF; margin-top: 16px; }
-
-        .controls { display: flex; justify-content: center; gap: 12px; }
-        .btn-icon { width: 44px; height: 44px; border-radius: 50%; border: 2px solid #E5E7EB; background: white; font-size: 1rem; cursor: pointer; -webkit-appearance: none; }
-        .btn-next { background: #8B0000; color: white; border: none; padding: 12px 24px; border-radius: 24px; font-weight: bold; cursor: pointer; -webkit-appearance: none; }
-
-        /* Quiz */
-        .quiz-word { font-size: 1.8rem; font-weight: bold; margin-bottom: 20px; }
-        .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .quiz-btn { 
-            background: #F9FAFB; 
-            border: 2px solid #E5E7EB; 
-            padding: 14px 10px; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            font-weight: 600;
-            font-size: 0.9rem;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-        .quiz-btn:active { background: #FEE2E2; border-color: #EF4444; }
-        .quiz-btn.correct { background: #D1FAE5; border-color: #10B981; color: #065F46; }
-        .quiz-btn.wrong { background: #FEE2E2; border-color: #EF4444; color: #991B1B; }
-        .quiz-btn:disabled { cursor: default; opacity: 0.8; }
-
-        .feedback { margin-top: 16px; padding: 12px; border-radius: 12px; font-weight: 600; }
-        .feedback.success { background: #D1FAE5; color: #065F46; }
-        .feedback.error { background: #FEE2E2; color: #991B1B; }
-        .btn-action { width: 100%; padding: 12px; border-radius: 24px; border: none; font-weight: bold; cursor: pointer; margin-top: 12px; -webkit-appearance: none; appearance: none; }
-        .btn-action.success { background: #10B981; color: white; }
-        .btn-action.error { background: #EF4444; color: white; }
-        .btn-action.primary { background: #8B0000; color: white; }
-
-        /* Audio */
-        .audio-btn { 
-            width: 90px; height: 90px; 
-            border-radius: 50%; 
-            background: linear-gradient(135deg, #8B0000, #DC2626); 
-            border: none; 
-            color: white; 
-            font-size: 2rem; 
-            cursor: pointer; 
-            margin: 16px auto;
-            display: block;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-        .audio-btn:active { transform: scale(0.95); }
-
-        /* Scenario */
-        .scenario-box { background: linear-gradient(135deg, #FEF3C7, #FDE68A); padding: 12px; border-radius: 12px; margin-bottom: 16px; text-align: left; }
-        .scenario-title { font-weight: bold; color: #92400E; font-size: 0.8rem; margin-bottom: 6px; }
-        .dialogue { background: white; padding: 10px; border-radius: 8px; font-style: italic; color: #78350F; }
-
-        /* Warning */
-        .warning-badge { background: #FEF3C7; color: #92400E; padding: 8px 16px; border-radius: 20px; font-weight: bold; margin-bottom: 16px; display: inline-block; }
-
-        /* Recipe */
-        .recipe-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; text-align: left; }
-        .recipe-icon { width: 40px; height: 40px; background: #FDE68A; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .recipe-name { font-weight: bold; color: #78350F; }
-        .recipe-steps { display: flex; flex-direction: column; gap: 6px; }
-        .recipe-step { background: #F9FAFB; border: 2px solid #E5E7EB; padding: 10px 12px; border-radius: 10px; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
-        .recipe-step.selected { background: #8B0000; color: white; border-color: #8B0000; }
-        .recipe-step.completed { background: #D1FAE5; border-color: #10B981; color: #065F46; }
-        .step-num { width: 22px; height: 22px; border-radius: 50%; background: #E5E7EB; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; }
-        .recipe-step.selected .step-num { background: white; color: #8B0000; }
-
-        /* Rush */
-        .rush-timer-bar { height: 6px; background: #E5E7EB; border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
-        .rush-timer-fill { height: 100%; transition: width 0.1s; }
-        .rush-time { font-size: 1.8rem; font-weight: bold; margin-bottom: 16px; }
-        .rush-word { font-size: 1rem; color: #6B7280; }
-        .rush-translation { font-size: 2rem; font-weight: bold; margin: 8px 0 16px; }
-        .rush-input { width: 100%; padding: 14px; font-size: 1rem; border: 2px solid #E5E7EB; border-radius: 12px; text-align: center; outline: none; -webkit-appearance: none; }
-
-        /* Image Description */
-        .img-container { position: relative; border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
-        .img-container img { width: 100%; height: 150px; object-fit: cover; }
-        .img-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.7)); padding: 12px; }
-        .img-title { color: white; font-weight: bold; }
-        .vocab-box { background: #FEF3C7; border-radius: 10px; padding: 10px; margin-bottom: 12px; text-align: left; }
-        .vocab-title { font-size: 0.75rem; color: #92400E; font-weight: 600; margin-bottom: 6px; }
-        .vocab-tags { display: flex; flex-wrap: wrap; gap: 4px; }
-        .vocab-tag { background: white; padding: 3px 8px; border-radius: 10px; font-size: 0.75rem; color: #78350F; }
-        .desc-input { width: 100%; min-height: 80px; padding: 10px; border: 2px solid #E5E7EB; border-radius: 10px; font-size: 0.9rem; resize: none; -webkit-appearance: none; }
-        .char-count { font-size: 0.7rem; color: #9CA3AF; text-align: right; margin: 4px 0 12px; }
-        .result-box { background: #F0FDF4; border: 2px solid #86EFAC; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
-        .result-score { font-size: 2rem; margin-bottom: 4px; }
-        .result-percent { font-size: 1.5rem; font-weight: bold; color: #166534; }
-
-        /* Progress text */
-        .progress-text { font-size: 0.75rem; color: #6B7280; margin-bottom: 12px; }
+        .card-word { font-size: 1.75rem; font-weight: 800; margin: 8px 0; color: #1e293b; }
+        .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+        .quiz-btn { background: #f8fafc; border: 2px solid #e2e8f0; padding: 14px 10px; border-radius: 14px; cursor: pointer; font-weight: 600; font-size: 0.9rem; color: #334155; }
+        .quiz-btn.correct { background: #dcfce7; border-color: #22c55e; color: #166534; }
+        .quiz-btn.wrong { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
         
-        /* NOUVEAU: Streak indicator */
-        .streak-badge {
-            background: linear-gradient(135deg, #F59E0B, #D97706);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            margin-left: 8px;
+        .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+        .match-card {
+            background: #f8fafc; border: 2px solid #e2e8f0; padding: 12px 8px; border-radius: 12px;
+            font-size: 0.8rem; font-weight: 600; text-align: center; cursor: pointer; color: #334155;
         }
-        
-        /* NOUVEAU: Module rédaction IA */
-        .writing-section {
-            background: #F9FAFB;
-            border: 2px solid #E5E7EB;
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 12px;
-        }
-        .writing-prompt {
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-        .writing-textarea {
-            width: 100%;
-            min-height: 120px;
-            padding: 10px;
-            border: 2px solid #E5E7EB;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            resize: vertical;
-            font-family: inherit;
-        }
-        .writing-textarea:focus {
-            outline: none;
-            border-color: #8B0000;
-        }
-        .ai-correction {
-            background: #EFF6FF;
-            border: 2px solid #93C5FD;
-            border-radius: 12px;
-            padding: 12px;
-            margin-top: 12px;
-        }
-        .ai-correction-title {
-            font-weight: bold;
-            color: #1E40AF;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .correction-item {
-            background: white;
-            padding: 8px;
-            border-radius: 8px;
-            margin-bottom: 6px;
-            font-size: 0.85rem;
-        }
-        .correction-original {
-            color: #DC2626;
-            text-decoration: line-through;
-        }
-        .correction-corrected {
-            color: #059669;
-            font-weight: 600;
-        }
-        .correction-explanation {
-            color: #6B7280;
-            font-size: 0.75rem;
-            margin-top: 4px;
-        }
-        .api-key-input {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #E5E7EB;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-        }
-        .api-status {
-            font-size: 0.75rem;
-            padding: 4px 8px;
-            border-radius: 8px;
-            display: inline-block;
-        }
-        .api-status.connected { background: #D1FAE5; color: #065F46; }
-        .api-status.disconnected { background: #FEE2E2; color: #991B1B; }
-        
-        /* XP Animation */
-        .xp-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 16px 24px;
-            border-radius: 12px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            z-index: 1000;
-            animation: xpFadeIn 0.3s ease;
-        }
-        @keyframes xpFadeIn {
-            from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        }
-        
-        /* iOS specific fixes */
-        @supports (-webkit-touch-callout: none) {
-            .btn-start, .btn-action, .quiz-btn, .menu-btn, .audio-btn {
-                min-height: 44px;
-            }
-        }
+        .match-card.selected { background: #fee2e2; border-color: #991b1b; color: #991b1b; }
+        .match-card.matched { background: #dcfce7; border-color: #22c55e; color: #166534; opacity: 0.6; pointer-events: none; }
+
+        .dict-search { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 0.95rem; margin-bottom: 12px; outline: none; }
+        .dict-list { max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; text-align: left; }
+        .dict-item { background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; font-size: 0.9rem; }
+        .btn-action { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; margin-top: 12px; background: #991b1b; color: white; }
     </style>
 </head>
 <body>
 
-    <!-- ACCUEIL -->
     <div id="home-screen">
-        <div style="font-size: 3rem; margin-bottom: 8px;">🥩</div>
+        <div style="font-size: 3.5rem; margin-bottom: 8px;">🥩</div>
         <h1>Butcher's English Pro</h1>
-        <p class="subtitle">Vocabulaire Technique Boucherie</p>
+        <p class="subtitle">Vocabulaire Technique & Professionnel en Anglais</p>
         
         <div class="image-grid">
             <img src="https://images.unsplash.com/photo-1588347818036-558601350947?w=400&q=80" alt="Boucherie">
             <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80" alt="Viande">
         </div>
         
-        <div id="home-progress"></div>
-        
-        <button class="btn-start" id="start-btn">Commencer la formation</button>
-        
-        <p style="font-size: 0.7rem; color: #9CA3AF; margin-top: 20px;">
-            📱 Ajoutez à votre écran d'accueil
-        </p>
+        <button class="btn-start" id="start-btn">Commencer l'entraînement</button>
+        <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 24px;">📱 Données sauvegardées automatiquement sur votre appareil</p>
     </div>
 
-    <!-- JEU -->
     <div id="game-screen">
         <header>
             <div class="header-top">
-                <button class="btn-home" id="home-btn">🏠</button>
+                <button class="btn-home" id="home-btn">🏠 Accueil</button>
                 <span class="header-title">Butcher's English Pro</span>
-                <div style="width:30px;"></div>
+                <span id="xp-display" style="font-weight:700; color:#991b1b; font-size:0.85rem;">0 XP</span>
             </div>
-            
-            <div class="progress-header">
-                <div class="level-info">
-                    <span class="level-icon" id="lvl-icon">🔪</span>
-                    <span class="level-name" id="lvl-name">Niveau 1 · Apprenti</span>
-                    <span class="streak-badge" id="streak-badge" style="display:none;">🔥 <span id="streak-count">0</span></span>
-                </div>
-                <span class="xp-count" id="xp-display">0 XP</span>
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#64748b;">
+                <span id="lvl-name">Niveau 1 · Professionnel</span>
+                <span id="lvl-progress">0 / 30 XP</span>
             </div>
-            
             <div class="progress-bar-container">
-                <div class="progress-bar-fill" id="progress-fill" style="width: 0%;">
-                    <div class="progress-knife" id="progress-knife">🔪</div>
-                </div>
+                <div class="progress-bar-fill" id="progress-fill"></div>
             </div>
-            
-            <!-- NOUVEAU: Labels des niveaux -->
-            <div class="level-labels" id="level-labels"></div>
-            <div class="level-dots" id="level-dots" style="display:none;"></div>
         </header>
 
-        <nav class="menu-scroll" id="mode-menu"></nav>
+        <nav class="menu-scroll" id="mode-menu">
+            <button class="menu-btn active" data-mode="flashcards">📚 Flashcards</button>
+            <button class="menu-btn" data-mode="quiz">✍️ Quiz</button>
+            <button class="menu-btn" data-mode="matching">🔗 Appariement</button>
+            <button class="menu-btn" data-mode="exam">🎓 Examen (10q)</button>
+            <button class="menu-btn" data-mode="roleplay">💬 Défis Vente</button>
+            <button class="menu-btn" data-mode="dict">📖 Dictionnaire</button>
+        </nav>
+
         <nav class="menu-scroll" id="theme-menu"></nav>
 
         <main>
@@ -488,1378 +121,415 @@
     </div>
 
     <script>
-        // ==========================================
-        // DONNÉES
-        // ==========================================
         const DATABASE = {
-            // ==========================================
-            // VIANDES DE BASE
-            // ==========================================
-            "Viandes": [
+            "Viandes & Animaux": [
                 { fr: "Le bœuf", en: "Beef", ex: "Beef is popular for roast." },
                 { fr: "Le poulet", en: "Chicken", ex: "Free-range chicken." },
                 { fr: "L'agneau", en: "Lamb", ex: "Lamb chops are tasty." },
                 { fr: "Le porc", en: "Pork", ex: "Pork ribs for BBQ." },
                 { fr: "Le veau", en: "Veal", ex: "Veal escalope." },
-                { fr: "La dinde", en: "Turkey", ex: "Roast turkey." },
-                { fr: "Le canard", en: "Duck", ex: "Duck breast." },
-                { fr: "Le lapin", en: "Rabbit", ex: "Rabbit stew." },
-                { fr: "Le sanglier", en: "Wild boar", ex: "Wild boar is gamey." },
-                { fr: "Le chevreuil", en: "Venison", ex: "Venison steak." }
+                { fr: "La dinde", en: "Turkey", ex: "Whole turkey for Christmas." },
+                { fr: "Le canard", en: "Duck", ex: "Duck breast is delicious." },
+                { fr: "Le gibier", en: "Game", ex: "Wild game season in autumn." },
+                { fr: "Le sanglier", en: "Wild boar", ex: "Wild boar stew." },
+                { fr: "Le chevreuil", en: "Venison", ex: "Venison roast." },
+                { fr: "Le lapin", en: "Rabbit", ex: "Rabbit with mustard." },
+                { fr: "L'abats", en: "Offal", ex: "Fresh offal display." },
+                { fr: "Le foie", en: "Liver", ex: "Calf's liver." },
+                { fr: "Les rognons", en: "Kidneys", ex: "Lamb kidneys." },
+                { fr: "Le ris de veau", en: "Sweetbreads", ex: "Crispy sweetbreads." }
             ],
-            
-            // ==========================================
-            // MORCEAUX DE BŒUF
-            // ==========================================
-            "Morceaux de Bœuf": [
+            "Morceaux": [
                 { fr: "Le filet de bœuf", en: "Tenderloin", ex: "Beef tenderloin is very tender." },
                 { fr: "Le faux-filet", en: "Sirloin", ex: "Sirloin steak is flavorful." },
                 { fr: "L'entrecôte", en: "Ribeye", ex: "Ribeye steak is well marbled." },
                 { fr: "La côte de bœuf", en: "Prime rib", ex: "Prime rib for Sunday roast." },
-                { fr: "Le rumsteck", en: "Rump steak", ex: "Rump steak is lean and tasty." },
-                { fr: "La bavette", en: "Flank steak", ex: "Flank steak is best marinated." },
-                { fr: "L'onglet", en: "Hanger steak", ex: "Hanger steak has a unique flavor." },
-                { fr: "Le jarret", en: "Shank", ex: "Beef shank is perfect for stew." },
-                { fr: "La viande hachée", en: "Ground beef", ex: "Ground beef for burgers." }
+                { fr: "Le rumsteck", en: "Rump steak", ex: "Lean rump steak." },
+                { fr: "Le paleron", en: "Chuck steak", ex: "Chuck steak for braising." },
+                { fr: "Le bourguignon", en: "Stew beef", ex: "Cubes of stew beef." },
+                { fr: "Le jarret", en: "Shin / Shank", ex: "Beef shank for osso buco." },
+                { fr: "La poitrine", en: "Brisket", ex: "Smoked beef brisket." },
+                { fr: "Le carré d'agneau", en: "Rack of lamb", ex: "Roasted rack of lamb." },
+                { fr: "La côtelette de porc", en: "Pork chop", ex: "Juicy pork chop." },
+                { fr: "Le filet mignon", en: "Pork tenderloin", ex: "Pork tenderloin medallions." },
+                { fr: "L'épaule", en: "Shoulder", ex: "Shoulder of lamb." },
+                { fr: "Le gigot d'agneau", en: "Leg of lamb", ex: "Traditional leg of lamb." },
+                { fr: "La bavette", en: "Flank steak", ex: "Flank steak with shallots." }
             ],
-            
-            // ==========================================
-            // MORCEAUX DE PORC
-            // ==========================================
-            "Morceaux de Porc": [
-                { fr: "Le filet mignon de porc", en: "Pork tenderloin", ex: "Pork tenderloin is very lean." },
-                { fr: "L'échine de porc", en: "Pork shoulder", ex: "Pork shoulder is great for roasting." },
-                { fr: "La poitrine de porc", en: "Pork belly", ex: "Pork belly is used for bacon." },
-                { fr: "Les travers de porc", en: "Spare ribs", ex: "Spare ribs for BBQ." },
-                { fr: "La côtelette de porc", en: "Pork chop", ex: "Grilled pork chop." },
-                { fr: "Le jambon", en: "Ham", ex: "Baked ham for Christmas." }
-            ],
-            
-            // ==========================================
-            // MORCEAUX D'AGNEAU
-            // ==========================================
-            "Morceaux d'Agneau": [
-                { fr: "Le gigot d'agneau", en: "Leg of lamb", ex: "Roast leg of lamb with herbs." },
-                { fr: "La souris d'agneau", en: "Lamb shank", ex: "Braised lamb shank is delicious." },
-                { fr: "Le carré d'agneau", en: "Rack of lamb", ex: "Rack of lamb is elegant." },
-                { fr: "Les côtelettes d'agneau", en: "Lamb chops", ex: "Grilled lamb chops with garlic." },
-                { fr: "L'épaule d'agneau", en: "Lamb shoulder", ex: "Slow-cooked lamb shoulder." },
-                { fr: "La selle d'agneau", en: "Saddle of lamb", ex: "Saddle of lamb is a classic cut." }
-            ],
-            
-            // ==========================================
-            // VOLAILLES
-            // ==========================================
-            "Volailles": [
-                { fr: "Le blanc de poulet", en: "Chicken breast", ex: "Chicken breast is lean protein." },
-                { fr: "Le suprême de volaille", en: "Supreme", ex: "Supreme of chicken with sauce." },
-                { fr: "La cuisse de poulet", en: "Chicken leg", ex: "Chicken leg is juicy and flavorful." },
-                { fr: "Le haut de cuisse", en: "Chicken thigh", ex: "Chicken thighs are tender." },
-                { fr: "Le pilon", en: "Drumstick", ex: "Kids love drumsticks." },
-                { fr: "L'aile de poulet", en: "Chicken wing", ex: "Buffalo chicken wings." },
-                { fr: "Le magret de canard", en: "Duck breast", ex: "Pan-seared duck breast." }
-            ],
-            
-            // ==========================================
-            // GIBIER
-            // ==========================================
-            "Gibier": [
-                { fr: "Le lapin", en: "Rabbit", ex: "Rabbit stew with mustard." },
-                { fr: "Le lièvre", en: "Hare", ex: "Jugged hare is a classic." },
-                { fr: "Le cerf", en: "Venison", ex: "Venison steak is lean and rich." },
-                { fr: "Le sanglier", en: "Wild boar", ex: "Wild boar is gamey and flavorful." },
-                { fr: "Le faisan", en: "Pheasant", ex: "Roast pheasant with chestnuts." },
-                { fr: "La perdrix", en: "Partridge", ex: "Partridge with cabbage." }
-            ],
-            
-            // ==========================================
-            // POISSONS
-            // ==========================================
-            "Poissons": [
-                { fr: "Le saumon", en: "Salmon", ex: "Grilled salmon fillet." },
-                { fr: "Le thon", en: "Tuna", ex: "Tuna steak is best seared." },
-                { fr: "Le cabillaud", en: "Cod", ex: "Cod is perfect for fish and chips." },
-                { fr: "La truite", en: "Trout", ex: "Rainbow trout with almonds." },
-                { fr: "La sole", en: "Sole", ex: "Sole meunière is a classic." },
-                { fr: "Le bar", en: "Sea bass", ex: "Grilled sea bass with herbs." },
-                { fr: "La dorade", en: "Sea bream", ex: "Baked sea bream with lemon." },
-                { fr: "Le maquereau", en: "Mackerel", ex: "Smoked mackerel pâté." },
-                { fr: "La sardine", en: "Sardine", ex: "Fresh sardines on the grill." }
-            ],
-            
-            // ==========================================
-            // FRUITS DE MER
-            // ==========================================
-            "Fruits de Mer": [
-                { fr: "La crevette", en: "Shrimp", ex: "Garlic butter shrimp." },
-                { fr: "Le homard", en: "Lobster", ex: "Lobster thermidor." },
-                { fr: "Le crabe", en: "Crab", ex: "Crab cakes with remoulade." },
-                { fr: "La langouste", en: "Rock lobster", ex: "Grilled rock lobster tail." },
-                { fr: "L'écrevisse", en: "Crayfish", ex: "Crayfish bisque." },
-                { fr: "L'huître", en: "Oyster", ex: "Fresh oysters with lemon." },
-                { fr: "La moule", en: "Mussel", ex: "Moules marinières." },
-                { fr: "La palourde", en: "Clam", ex: "Clam chowder." },
-                { fr: "La coquille Saint-Jacques", en: "Scallop", ex: "Pan-seared scallops." },
-                { fr: "Le bulot", en: "Whelk", ex: "Whelks with mayonnaise." }
-            ],
-            
-            // ==========================================
-            // CÉPHALOPODES & AUTRES
-            // ==========================================
-            "Céphalopodes": [
-                { fr: "Le calmar", en: "Squid", ex: "Fried calamari rings." },
-                { fr: "Le poulpe", en: "Octopus", ex: "Grilled octopus with olive oil." },
-                { fr: "La seiche", en: "Cuttlefish", ex: "Cuttlefish with ink sauce." },
-                { fr: "L'escargot", en: "Snail", ex: "Escargots de Bourgogne." },
-                { fr: "La grenouille", en: "Frog", ex: "Frog legs with garlic butter." },
-                { fr: "L'oursin", en: "Sea urchin", ex: "Fresh sea urchin roe." },
-                { fr: "L'anguille", en: "Eel", ex: "Smoked eel is a delicacy." }
-            ],
-            
-            // ==========================================
-            // OUTILS
-            // ==========================================
             "Outils": [
-                { fr: "Le couteau de chef", en: "Chef's knife", ex: "Use a chef's knife." },
+                { fr: "Le couteau de chef", en: "Chef's knife", ex: "Use a sharp chef's knife." },
                 { fr: "Le hachoir", en: "Cleaver", ex: "Use a cleaver for bones." },
                 { fr: "Le couteau à désosser", en: "Boning knife", ex: "Boning knife is flexible." },
-                { fr: "Le couteau à trancher", en: "Slicing knife", ex: "Slicing knife for roasts." },
-                { fr: "La scie à viande", en: "Butcher's saw", ex: "Use the saw." },
-                { fr: "Le thermomètre", en: "Meat thermometer", ex: "Check temperature." },
-                { fr: "La planche à découper", en: "Cutting board", ex: "Clean the board." },
-                { fr: "La ficelle", en: "Butcher's twine", ex: "Tie with twine." },
-                { fr: "Les pinces", en: "Tongs", ex: "Use tongs to turn." },
-                { fr: "L'aiguille à brider", en: "Trussing needle", ex: "Truss the chicken." }
+                { fr: "La scie à viande", en: "Butcher's saw", ex: "Cut with the butcher's saw." },
+                { fr: "Le fusil à aiguiser", en: "Sharpening steel", ex: "Hone the blade on the steel." },
+                { fr: "Le billot", en: "Butcher's block", ex: "Clean the wooden block." },
+                { fr: "La trancheuse", en: "Slicer", ex: "Electric meat slicer." },
+                { fr: "Le hachoir à viande", en: "Meat grinder", ex: "Grind fresh beef." },
+                { fr: "La ficelle de boucher", en: "Butcher's twine", ex: "Tie the roast securely." },
+                { fr: "Le crochet de boucher", en: "Meat hook", ex: "Hang the carcass on the hook." },
+                { fr: "La balance", en: "Scale", ex: "Weigh the meat on the scale." },
+                { fr: "Le papier sulfurisé", en: "Butcher paper", ex: "Wrap the meat in paper." }
             ],
-            
-            // ==========================================
-            // CUISSON
-            // ==========================================
-            "Cuisson": [
-                { fr: "Saignant", en: "Rare", ex: "I like it rare." },
+            "Cuissons & Grades": [
+                { fr: "Saignant", en: "Rare", ex: "I like my steak rare." },
                 { fr: "À point", en: "Medium rare", ex: "Medium rare, please." },
-                { fr: "Bien cuit", en: "Well done", ex: "Well done burger." },
-                { fr: "Bleu", en: "Blue", ex: "Very rare, blue." },
-                { fr: "Grillé", en: "Grilled", ex: "Grilled chicken." },
-                { fr: "Braisé", en: "Braised", ex: "Braised beef." },
-                { fr: "Rôti", en: "Roasted", ex: "Roasted lamb." },
+                { fr: "Bien cuit", en: "Well done", ex: "A well done burger." },
+                { fr: "Bleu", en: "Blue / Very rare", ex: "Blue steak seared quickly." },
+                { fr: "À point (tendre)", en: "Medium", ex: "Medium cooked ribeye." },
+                { fr: "Rôti au four", en: "Roasted", ex: "Roasted leg of lamb." },
+                { fr: "Braisé", en: "Braised", ex: "Braised beef is tender." },
+                { fr: "Grillé", en: "Grilled", ex: "Grilled pork chops." },
                 { fr: "Fumé", en: "Smoked", ex: "Smoked bacon." },
-                { fr: "Poché", en: "Poached", ex: "Poached fish." },
-                { fr: "Pané", en: "Breaded", ex: "Breaded cutlet." }
+                { fr: "Persillé (persillage)", en: "Marbled (marbling)", ex: "High marbling score." }
+            ],
+            "Hygiène & Sécurité": [
+                { fr: "Nettoyer / Désinfecter", en: "Sanitize", ex: "Sanitize the cutting board." },
+                { fr: "La chaîne du froid", en: "Cold chain", ex: "Keep track of the cold chain." },
+                { fr: "Le tablier", en: "Apron", ex: "Wear a clean apron." },
+                { fr: "Les gants de protection", en: "Safety gloves", ex: "Use safety gloves." },
+                { fr: "La température", en: "Temperature", ex: "Check the fridge temperature." },
+                { fr: "La traçabilité", en: "Traceability", ex: "Check the meat traceability label." },
+                { fr: "La chambre froide", en: "Walk-in cooler", ex: "Store meat in the walk-in cooler." },
+                { fr: "La date limite de consommation", en: "Use-by date", ex: "Check the use-by date." }
+            ],
+            "Mesures & Poids": [
+                { fr: "Une livre (454g)", en: "Pound (lb)", ex: "Two pounds of ground beef." },
+                { fr: "Une once (28g)", en: "Ounce (oz)", ex: "Add 8 ounces of steak." },
+                { fr: "Le prix au kilo", en: "Price per kilo", ex: "What is the price per kilo?" },
+                { fr: "Le poids net", en: "Net weight", ex: "Check the net weight on the label." },
+                { fr: "Le gramme", en: "Gram", ex: "500 grams of minced meat." },
+                { fr: "Le kilogramme", en: "Kilogram", ex: "Three kilograms of pork ribs." }
             ]
         };
 
-        const LISTENING = [
-            // Viandes
-            { audio: "I need two pounds of ground beef.", answer: "🥩", hint: "Ground beef / Beef" },
-            { audio: "The pork tenderloin looks fresh today.", answer: "🐷", hint: "Pork" },
-            { audio: "Do you have lamb chops?", answer: "🐑", hint: "Lamb" },
-            { audio: "I would like a whole chicken.", answer: "🍗", hint: "Chicken" },
-            // Morceaux de bœuf
-            { audio: "The ribeye steak is well marbled.", answer: "🥩", hint: "Ribeye" },
-            { audio: "I need a tenderloin for the roast.", answer: "🔪", hint: "Tenderloin" },
-            { audio: "This sirloin is perfect for grilling.", answer: "🔥", hint: "Sirloin" },
-            { audio: "The prime rib is on special today.", answer: "🦴", hint: "Prime rib" },
-            { audio: "Flank steak is great for fajitas.", answer: "🌮", hint: "Flank steak" },
-            // Morceaux de porc
-            { audio: "The pork shoulder is great for slow cooking.", answer: "🍖", hint: "Pork shoulder" },
-            { audio: "I need spare ribs for the barbecue.", answer: "🔥", hint: "Spare ribs" },
-            { audio: "Grilled pork chops with apple sauce.", answer: "🍎", hint: "Pork chop" },
-            // Agneau
-            { audio: "The leg of lamb is perfect for Easter.", answer: "🐑", hint: "Leg of lamb" },
-            { audio: "Braised lamb shank with vegetables.", answer: "🥕", hint: "Lamb shank" },
-            { audio: "Rack of lamb with herb crust.", answer: "🌿", hint: "Rack of lamb" },
-            // Volailles
-            { audio: "Chicken breast is very lean.", answer: "🍗", hint: "Chicken breast" },
-            { audio: "The duck breast is from southwest France.", answer: "🦆", hint: "Duck breast" },
-            { audio: "I want chicken wings for the party.", answer: "🎉", hint: "Chicken wings" },
-            // Gibier
-            { audio: "Venison steak is very lean meat.", answer: "🦌", hint: "Venison" },
-            { audio: "Wild boar is very flavorful.", answer: "🐗", hint: "Wild boar" },
-            { audio: "Roast pheasant with chestnuts.", answer: "🌰", hint: "Pheasant" },
-            // Poissons
-            { audio: "The salmon fillet is very fresh.", answer: "🐟", hint: "Salmon" },
-            { audio: "Grilled sea bass with herbs.", answer: "🌿", hint: "Sea bass" },
-            { audio: "Tuna steak seared rare please.", answer: "🍣", hint: "Tuna" },
-            { audio: "Cod is perfect for fish and chips.", answer: "🍟", hint: "Cod" },
-            // Fruits de mer
-            { audio: "Fresh oysters with lemon juice.", answer: "🦪", hint: "Oyster" },
-            { audio: "The lobster is from Brittany.", answer: "🦞", hint: "Lobster" },
-            { audio: "Garlic butter shrimp on the grill.", answer: "🧄", hint: "Shrimp" },
-            { audio: "Pan-seared scallops with butter.", answer: "🧈", hint: "Scallop" },
-            // Céphalopodes
-            { audio: "Fried calamari with aioli sauce.", answer: "🦑", hint: "Squid / Calamari" },
-            { audio: "Grilled octopus with olive oil.", answer: "🐙", hint: "Octopus" },
-            // Outils & Cuisson
-            { audio: "This knife is very sharp.", answer: "🔪", hint: "Knife" },
-            { audio: "Cook the steak medium rare.", answer: "🩸", hint: "Medium rare" },
-            { audio: "Use the meat thermometer.", answer: "🌡️", hint: "Thermometer" }
-        ];
-
-        const FALSE_FRIENDS = [
-            { fr: "La chair (viande)", trap: "Chair", correct: "Flesh / Meat", exp: "'Chair' = siège en anglais !" },
-            { fr: "Le porc", trap: "Port", correct: "Pork", exp: "'Port' = vin, 'Pork' = viande" },
-            { fr: "L'aile", trap: "Aisle", correct: "Wing", exp: "'Aisle' = couloir, 'Wing' = aile" },
-            { fr: "Le maigre", trap: "Meager", correct: "Lean", exp: "'Lean meat' = viande maigre" },
-            { fr: "La graisse", trap: "Grease", correct: "Fat", exp: "'Fat' pour la viande" },
-            { fr: "Le filet (de viande)", trap: "Filet", correct: "Tenderloin / Fillet", exp: "'Filet' = filet de pêche !" },
-            { fr: "Le jambon", trap: "Jam", correct: "Ham", exp: "'Jam' = confiture, 'Ham' = jambon" },
-            { fr: "La cuisse", trap: "Cushion", correct: "Leg / Thigh", exp: "'Cushion' = coussin !" },
-            { fr: "Le bar (poisson)", trap: "Bar", correct: "Sea bass", exp: "'Bar' = bar/counter, 'Sea bass' = poisson" },
-            { fr: "La sole (poisson)", trap: "Sole", correct: "Sole", exp: "'Sole' = aussi 'semelle', mais 'Dover sole' = poisson" },
-            { fr: "Le crabe", trap: "Crab", correct: "Crab", exp: "Attention à la prononciation ! 'Crab' se prononce différemment" },
-            { fr: "L'anguille", trap: "Angle", correct: "Eel", exp: "'Angle' = angle géométrique, 'Eel' = anguille" }
+        const MATCHING_PAIRS = [
+            { animal: "Beef (Bœuf)", part: "Ribeye (Entrecôte)" },
+            { animal: "Pork (Porc)", part: "Pork Chop (Côtelette)" },
+            { animal: "Lamb (Agneau)", part: "Rack of Lamb (Carré)" },
+            { animal: "Chicken (Poulet)", part: "Chicken Breast (Blanc)" }
         ];
 
         const ROLEPLAY = [
-            // Vente de bœuf
-            { scene: "Vente Bœuf", ctx: "Client: 'I'd like a ribeye steak.'", opts: ["Here is a beautiful ribeye!", "We are closed.", "Too expensive."], correct: 0, fb: "Présentez le produit positivement !" },
-            { scene: "Vente Bœuf", ctx: "Client: 'What is the difference between sirloin and tenderloin?'", opts: ["They are the same.", "Tenderloin is more tender, sirloin has more flavor.", "I don't know."], correct: 1, fb: "Expliquez les différences de texture et goût." },
-            { scene: "Vente Bœuf", ctx: "Client: 'How do I cook a prime rib?'", opts: ["Boil it for 2 hours.", "Roast it at 180°C for about 20 minutes per pound.", "Eat it raw."], correct: 1, fb: "Donnez des conseils de cuisson précis." },
-            // Vente de porc
-            { scene: "Vente Porc", ctx: "Client: 'I need pork chops for dinner.'", opts: ["We don't have any.", "These pork chops are perfect for grilling!", "Only beef available."], correct: 1, fb: "Soyez serviable et proposez des suggestions !" },
-            { scene: "Vente Porc", ctx: "Client: 'Do you have spare ribs?'", opts: ["Yes, excellent for BBQ!", "No, try the fish market.", "What are spare ribs?"], correct: 0, fb: "Répondez positivement aux demandes !" },
-            // Vente d'agneau
-            { scene: "Vente Agneau", ctx: "Client: 'I want to cook lamb shanks.'", opts: ["Lamb shanks are great for braising!", "We only have beef.", "That's too expensive."], correct: 0, fb: "Proposez des conseils de préparation !" },
-            { scene: "Vente Agneau", ctx: "Client: 'What cut do you recommend for Easter?'", opts: ["Nothing special today.", "A leg of lamb is perfect for Easter!", "We are closed on holidays."], correct: 1, fb: "Suggérez des pièces adaptées aux occasions !" },
-            // Vente de volaille
-            { scene: "Vente Volaille", ctx: "Client: 'I need chicken breasts for a recipe.'", opts: ["Here are fresh chicken breasts!", "We only have whole chickens.", "Chicken is not fresh today."], correct: 0, fb: "Montrez les produits disponibles avec enthousiasme !" },
-            { scene: "Vente Volaille", ctx: "Client: 'Do you have duck breast?'", opts: ["Yes, this magret is from southwest France!", "No, try another shop.", "Duck is out of season."], correct: 0, fb: "Valorisez l'origine et la qualité des produits !" },
-            // Vente de poisson
-            { scene: "Vente Poisson", ctx: "Client: 'Is the salmon fresh today?'", opts: ["Yes, it arrived this morning!", "No, it's from last week.", "I'm not sure."], correct: 0, fb: "Rassurez le client sur la fraîcheur !" },
-            { scene: "Vente Poisson", ctx: "Client: 'What fish do you recommend for grilling?'", opts: ["Nothing is good for grilling.", "Sea bass or salmon are excellent grilled!", "We don't have fish today."], correct: 1, fb: "Proposez des alternatives adaptées à la cuisson demandée !" },
-            // Vente fruits de mer
-            { scene: "Vente Fruits de Mer", ctx: "Client: 'I need oysters for a party.'", opts: ["These fresh oysters are perfect!", "We don't sell oysters.", "Oysters are out of season."], correct: 0, fb: "Suggérez des quantités appropriées pour l'événement !" },
-            // Service
-            { scene: "Service", ctx: "Client: 'Can you debone this?'", opts: ["No.", "Of course! It will take 10 minutes.", "Do it yourself."], correct: 1, fb: "Offrez toujours votre aide !" },
-            { scene: "Prix", ctx: "Client: 'How much is this?'", opts: ["It's 15 euros per kilo.", "Too expensive for you.", "I'm busy."], correct: 0, fb: "Répondez poliment aux questions de prix." },
-            { scene: "Cuisson", ctx: "Client: 'I want it well done.'", opts: ["That's a mistake.", "Certainly, we can prepare it well done for you.", "Only rare available."], correct: 1, fb: "Respectez les préférences du client !" }
+            {
+                situation: "Un client anglophone souhaite acheter 2 livres de bœuf haché. Que dites-vous ?",
+                options: [
+                    { text: "Here is your ground beef, that will be 15 dollars.", correct: true },
+                    { text: "Where is the kitchen?", correct: false },
+                    { text: "I like rare steaks.", correct: false }
+                ]
+            },
+            {
+                situation: "Un client demande la cuisson de son entrecôte : 'How would you like your steak?'",
+                options: [
+                    { text: "Medium rare, please.", correct: true },
+                    { text: "Sanitize the counter.", correct: false },
+                    { text: "Two pounds of pork.", correct: false }
+                ]
+            }
         ];
 
-        const RECIPES = [
-            { name: "Beef Burger", steps: ["Grind beef", "Form patties", "Season", "Grill", "Assemble"] },
-            { name: "Roast Chicken", steps: ["Preheat oven", "Truss chicken", "Season", "Roast 1h20", "Carve"] },
-            { name: "Grilled Salmon", steps: ["Scale fish", "Remove pin bones", "Marinate", "Grill skin-side", "Rest and serve"] },
-            { name: "Lamb Shank", steps: ["Sear shanks", "Prepare mirepoix", "Add wine", "Braise 3 hours", "Reduce sauce"] },
-            { name: "Pork Ribs BBQ", steps: ["Remove membrane", "Dry rub spices", "Smoke 4 hours", "Glaze with sauce", "Rest and slice"] },
-            { name: "Duck Breast", steps: ["Score skin", "Season both sides", "Sear skin-side down", "Flip and finish", "Rest and slice"] }
-        ];
-
-        const IMAGES = [
-            { url: "https://images.unsplash.com/photo-1588347818036-558601350947?w=600&q=80", title: "Au comptoir", vocab: ["counter", "display", "cuts", "serve", "weigh"] },
-            { url: "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80", title: "Préparation", vocab: ["knife", "cutting board", "slice", "trim", "fresh"] },
-            { url: "https://images.unsplash.com/photo-1558030006-450675393462?w=600&q=80", title: "Étalage", vocab: ["display case", "variety", "fresh", "quality", "marbling"] }
-        ];
-
-        // NOUVEAU: Prompts pour le module rédaction
-        const WRITING_PROMPTS = [
-            { topic: "Présentation client", prompt: "Un client entre dans votre boucherie. Présentez-vous et demandez comment vous pouvez l'aider. (Minimum 30 mots)", minWords: 30 },
-            { topic: "Conseil cuisson", prompt: "Un client demande comment cuisiner un rôti de bœuf. Donnez-lui des conseils détaillés. (Minimum 40 mots)", minWords: 40 },
-            { topic: "Description produit", prompt: "Décrivez une entrecôte de bœuf à un client qui hésite. Parlez de sa qualité et de sa tendreté. (Minimum 35 mots)", minWords: 35 },
-            { topic: "Réclamation", prompt: "Un client n'est pas satisfait de sa viande. Répondez poliment et proposez une solution. (Minimum 30 mots)", minWords: 30 },
-            { topic: "Vente suggestive", prompt: "Un client achète des côtelettes de porc. Suggérez-lui d'autres produits pour compléter son repas. (Minimum 35 mots)", minWords: 35 }
-        ];
-
-        // NOUVEAU: Niveaux avec noms français professionnels
-        const LEVELS = {
-            1: { name: "Apprenti", icon: "🔪", xp: 0, fullName: "Apprenti Boucher" },
-            2: { name: "Commis", icon: "🥩", xp: 150, fullName: "Commis Boucher" },
-            3: { name: "Boucher", icon: "👨‍🍳", xp: 400, fullName: "Boucher" },
-            4: { name: "Chef Boucher", icon: "🎖️", xp: 800, fullName: "Chef Boucher" },
-            5: { name: "MOF", icon: "👑", xp: 1500, fullName: "Meilleur Ouvrier de France" }
+        let state = {
+            xp: parseInt(localStorage.getItem('butcher_xp')) || 0,
+            mode: 'flashcards',
+            theme: 'Viandes & Animaux',
+            cardIdx: 0,
+            quizIdx: 0,
+            examIdx: 0,
+            examScore: 0,
+            roleplayIdx: 0,
+            selectedAnimal: null,
+            isFlipped: false
         };
 
-        // ==========================================
-        // ÉTAT
-        // ==========================================
-        let xp = 0;
-        let mode = "flashcard";
-        let theme = "Viandes";
-        let deck = [];
-        let idx = 0;
-        let flipped = false;
-        let rushTimer = null;
-        let rushTime = 15;
-        let rushItem = null;
-        let rushScore = 0;
-        let recipeIdx = 0;
-        let userSteps = [];
-        let selStep = null;
-        
-        // NOUVEAU: Système de streak et XP optimisé
-        let streak = 0;
-        let correctAnswers = 0;
-        let totalAnswers = 0;
-        let dailyXP = 0;
-        let lastAnswerTime = 0;
-        
-        // États persistants
-        let currentListeningItem = null;
-        let currentListeningOptions = null;
-        let currentRoleplayItem = null;
-        let currentFalseFriendItem = null;
-        let currentFalseFriendOptions = null;
-        let currentImageItem = null;
-        let currentWritingPrompt = null;
-        
-        // NOUVEAU: Configuration API IA
-        let apiKey = '';
-        let aiConnected = false;
-
-        // Charger données
-        try { 
-            xp = parseInt(localStorage.getItem('butcherXP')) || 0; 
-            streak = parseInt(localStorage.getItem('butcherStreak')) || 0;
-            dailyXP = parseInt(localStorage.getItem('butcherDailyXP')) || 0;
-            apiKey = localStorage.getItem('butcherAPIKey') || '';
-        } catch(e) { xp = 0; streak = 0; dailyXP = 0; }
-
-        // ==========================================
-        // NOUVEAU: SYSTÈME XP OPTIMISÉ
-        // ==========================================
-        
-        // Facteur de difficulté par mode
-        const XP_MULTIPLIERS = {
-            'flashcard': 0.5,    // Moins de XP pour les cartes (apprentissage passif)
-            'quiz': 1.0,         // XP normal pour quiz
-            'listening': 1.2,    // Plus dur, plus de XP
-            'roleplay': 1.5,     // Scénarios complexes
-            'falsefriends': 1.3, // Pièges difficiles
-            'recipe': 1.8,       // Ordonner = réflexion
-            'rush': 2.0,         // Contre la montre = très dur
-            'image': 1.5,        // Production écrite
-            'writing': 2.5       // Rédaction avec IA = le plus dur
-        };
-        
-        // Limite XP quotidienne
-        const MAX_DAILY_XP = 500;
-        
-        // Calcul XP avec streak et limites
-        function calculateXP(baseXP, modeType, isCorrect) {
-            if (!isCorrect) return 0;
-            
-            // Vérifier limite quotidienne
-            if (dailyXP >= MAX_DAILY_XP) {
-                showXPPopup("Limite quotidienne atteinte!", 0);
-                return 0;
-            }
-            
-            // Facteur de mode
-            const modeMultiplier = XP_MULTIPLIERS[modeType] || 1.0;
-            
-            // Bonus de streak (max 2x après 10 bonnes réponses consécutives)
-            const streakBonus = 1 + Math.min(streak * 0.1, 1.0);
-            
-            // Malus de rapidité (éviter le spam)
-            const now = Date.now();
-            const timeSinceLastAnswer = now - lastAnswerTime;
-            const speedPenalty = timeSinceLastAnswer < 2000 ? 0.5 : 1.0; // -50% si trop rapide
-            
-            lastAnswerTime = now;
-            
-            // Calcul final
-            let finalXP = Math.round(baseXP * modeMultiplier * streakBonus * speedPenalty);
-            
-            // Limiter pour ne pas dépasser le max quotidien
-            const remaining = MAX_DAILY_XP - dailyXP;
-            finalXP = Math.min(finalXP, remaining);
-            
-            return finalXP;
-        }
-        
-        function addXP(n, modeType, isCorrect = true) {
-            const actualXP = calculateXP(n, modeType, isCorrect);
-            
-            if (actualXP > 0) {
-                xp += actualXP;
-                dailyXP += actualXP;
-                
-                // Mettre à jour le streak
-                if (isCorrect) {
-                    streak++;
-                    correctAnswers++;
-                }
-                totalAnswers++;
-                
-                // Sauvegarder
-                try { 
-                    localStorage.setItem('butcherXP', xp); 
-                    localStorage.setItem('butcherStreak', streak);
-                    localStorage.setItem('butcherDailyXP', dailyXP);
-                } catch(e) {}
-                
-                // Animation XP
-                showXPPopup(`+${actualXP} XP`, actualXP);
-            } else if (isCorrect) {
-                // Montrer pourquoi pas de XP
-                showXPPopup("Trop rapide! Attendez 2s", 0);
-            }
-            
-            updateProgress();
-        }
-        
-        // Réinitialiser le streak en cas d'erreur
-        function breakStreak() {
-            streak = 0;
-            totalAnswers++;
-            try { localStorage.setItem('butcherStreak', 0); } catch(e) {}
-            updateProgress();
-        }
-        
-        function showXPPopup(text, amount) {
-            const popup = document.createElement('div');
-            popup.className = 'xp-popup';
-            popup.textContent = text;
-            popup.style.color = amount > 0 ? '#10B981' : '#F59E0B';
-            document.body.appendChild(popup);
-            
-            setTimeout(() => popup.remove(), 1500);
-        }
-
-        function getLevel() {
-            for (let i = 5; i >= 1; i--) {
-                if (xp >= LEVELS[i].xp) {
-                    return { lvl: i, ...LEVELS[i], next: LEVELS[i+1] };
-                }
-            }
-            return { lvl: 1, ...LEVELS[1], next: LEVELS[2] };
-        }
-
-        function updateProgress() {
-            const L = getLevel();
-            document.getElementById('lvl-icon').textContent = L.icon;
-            document.getElementById('lvl-name').textContent = `Niveau ${L.lvl} · ${L.name}`;
-            document.getElementById('xp-display').textContent = `${xp} XP`;
-            
-            // Afficher streak si > 0
-            const streakBadge = document.getElementById('streak-badge');
-            if (streak > 0) {
-                streakBadge.style.display = 'inline-flex';
-                document.getElementById('streak-count').textContent = streak;
-            } else {
-                streakBadge.style.display = 'none';
-            }
-            
-            const prevXp = LEVELS[L.lvl].xp;
-            const nextXp = L.next ? L.next.xp : L.xp + 500;
-            const pct = L.next ? ((xp - prevXp) / (nextXp - prevXp)) * 100 : 100;
-            
-            document.getElementById('progress-fill').style.width = Math.min(100, pct) + '%';
-            
-            // NOUVEAU: Afficher les labels des niveaux
-            let labels = '';
-            for (let i = 1; i <= 5; i++) {
-                const isCurrent = i === L.lvl;
-                const isPassed = xp >= LEVELS[i].xp;
-                labels += `<div class="level-label ${isCurrent ? 'current' : ''} ${isPassed ? 'passed' : ''}">${LEVELS[i].name}</div>`;
-            }
-            document.getElementById('level-labels').innerHTML = labels;
-        }
-
-        function showThemeMenu(show) {
-            const menu = document.getElementById('theme-menu');
-            if (show) {
-                let html = '';
-                for (let k in DATABASE) {
-                    html += `<button class="menu-btn ${k === theme ? 'active' : ''}" data-theme="${k}">${k}</button>`;
-                }
-                menu.innerHTML = html;
-                menu.style.display = 'flex';
-            } else {
-                menu.style.display = 'none';
-            }
-        }
-
-        function renderModeMenu() {
-            const modes = [
-                ['flashcard', '📚 Cartes'],
-                ['quiz', '❓ Quiz'],
-                ['listening', '👂 Audio'],
-                ['roleplay', '🎭 Vente'],
-                ['falsefriends', '⚠️ Pièges'],
-                ['recipe', '📜 Recettes'],
-                ['rush', '⏱️ Rush'],
-                ['image', '📷 Images'],
-                ['writing', '✍️ Rédaction']  // NOUVEAU
-            ];
-            document.getElementById('mode-menu').innerHTML = modes.map(m => 
-                `<button class="menu-btn ${m[0] === mode ? 'active' : ''}" data-mode="${m[0]}">${m[1]}</button>`
-            ).join('');
-        }
-
-        // ==========================================
-        // RENDU DES MODES
-        // ==========================================
-        
-        // NOUVEAU: Afficher compteur de cartes
-        function renderCardCounter(current, total, label = "cartes") {
-            return `<div class="card-counter">📚 ${current} / ${total} ${label}</div>`;
-        }
-        
-        // NOUVEAU: Afficher header quiz avec numéro
-        function renderQuizHeader(questionNum, totalQuestions, themeName) {
-            return `
-                <div class="quiz-header">
-                    <div class="quiz-number">Question ${questionNum}/${totalQuestions}</div>
-                    <div class="quiz-theme">${themeName}</div>
-                </div>
-            `;
-        }
-
-        // ==========================================
-        // FONCTIONS UTILITAIRES
-        // ==========================================
-        function shuffle(arr) {
-            let a = [...arr];
-            for (let i = a.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [a[i], a[j]] = [a[j], a[i]];
-            }
-            return a;
-        }
-
-        function speak(text) {
-            try {
-                window.speechSynthesis.cancel();
-                const u = new SpeechSynthesisUtterance(text);
-                u.lang = 'en-GB';
-                u.rate = 0.9;
-                window.speechSynthesis.speak(u);
-            } catch(e) { console.log('Speech not available'); }
-        }
-
-        function renderFlashcard() {
-            const item = deck[idx];
-            const area = document.getElementById('game-area');
-            
-            // NOUVEAU: Compteur de cartes
-            area.innerHTML = `
-                ${renderCardCounter(idx + 1, deck.length, "cartes")}
-                <div class="flashcard ${flipped ? 'flashcard-back' : 'flashcard-front'}" id="card">
-                    <span class="card-label">${flipped ? 'English' : 'Français'}</span>
-                    <div class="card-word">${flipped ? item.en : item.fr}</div>
-                    ${flipped ? `<div class="card-example">"${item.ex}"</div><button class="btn-icon" id="speak-btn" style="margin-top:12px;">🔊</button>` : '<div class="card-hint">👆 Touchez pour retourner</div>'}
-                </div>
-                <div class="controls">
-                    <button class="btn-icon" id="prev-btn" ${idx === 0 ? 'disabled' : ''}>◀</button>
-                    <button class="btn-icon" id="shuf-btn">🔄</button>
-                    <button class="btn-next" id="next-btn">Suivant ▶</button>
-                </div>
-            `;
-            
-            document.getElementById('card').addEventListener('click', () => { 
-                flipped = !flipped; 
-                renderFlashcard(); 
-                if(flipped) speak(item.en); 
-            });
-            document.getElementById('prev-btn').addEventListener('click', () => { if(idx > 0) { idx--; flipped = false; renderFlashcard(); } });
-            document.getElementById('shuf-btn').addEventListener('click', () => { deck = shuffle(deck); idx = 0; flipped = false; renderFlashcard(); });
-            document.getElementById('next-btn').addEventListener('click', () => { idx = (idx + 1) % deck.length; if(idx === 0) deck = shuffle(deck); flipped = false; renderFlashcard(); });
-            if(flipped) {
-                document.getElementById('speak-btn').addEventListener('click', (e) => { e.stopPropagation(); speak(item.en); });
-            }
-        }
-
-        function renderQuiz() {
-            const item = deck[idx];
-            const area = document.getElementById('game-area');
-            
-            // Générer options
-            let opts = [item.en];
-            const all = Object.values(DATABASE).flat().map(x => x.en);
-            while (opts.length < 4) {
-                const r = all[Math.floor(Math.random() * all.length)];
-                if (!opts.includes(r)) opts.push(r);
-            }
-            opts = shuffle(opts);
-            
-            // NOUVEAU: Header avec numéro de quiz
-            area.innerHTML = `
-                ${renderQuizHeader(idx + 1, deck.length, theme)}
-                <p style="color:#6B7280; font-size:0.9rem;">Traduisez en anglais :</p>
-                <div class="quiz-word">${item.fr}</div>
-                <div class="quiz-options" id="opts">
-                    ${opts.map(o => `<button class="quiz-btn" data-ans="${o}">${o}</button>`).join('')}
-                </div>
-                <div id="quiz-result"></div>
-            `;
-            
-            document.querySelectorAll('#opts .quiz-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const ans = btn.dataset.ans;
-                    const correct = ans === item.en;
-                    document.querySelectorAll('#opts .quiz-btn').forEach(b => {
-                        b.disabled = true;
-                        if (b.dataset.ans === item.en) b.classList.add('correct');
-                        if (b.dataset.ans === ans && !correct) b.classList.add('wrong');
-                    });
-                    
-                    if (correct) {
-                        addXP(10, 'quiz', true);
-                    } else {
-                        breakStreak();
-                    }
-                    
-                    document.getElementById('quiz-result').innerHTML = `
-                        <div class="feedback ${correct ? 'success' : 'error'}">
-                            ${correct ? '🎉 Correct !' : '❌ Réponse : ' + item.en}
-                            ${streak > 2 ? `<span class="streak-badge">🔥 x${streak}</span>` : ''}
-                        </div>
-                        <button class="btn-action ${correct ? 'success' : 'error'}" id="next-quiz">Suivant ▶</button>
-                    `;
-                    document.getElementById('next-quiz').addEventListener('click', () => { idx = (idx + 1) % deck.length; if(idx === 0) deck = shuffle(deck); renderQuiz(); });
-                });
-            });
-        }
-
-        // ==========================================
-        // MODE LISTENING
-        // ==========================================
-        function initListeningMode() {
-            currentListeningItem = LISTENING[Math.floor(Math.random() * LISTENING.length)];
-            
-            const allEmojis = ["🥩", "🍔", "🍗", "🔪", "🦴", "🩸", "🐑", "🌭"];
-            let options = [currentListeningItem.answer];
-            while (options.length < 4) {
-                const rand = allEmojis[Math.floor(Math.random() * allEmojis.length)];
-                if (!options.includes(rand)) options.push(rand);
-            }
-            currentListeningOptions = shuffle(options);
-            
-            renderListening(null);
-        }
-
-        function renderListening(selectedAnswer) {
-            const item = currentListeningItem;
-            const options = currentListeningOptions;
-            const area = document.getElementById('game-area');
-            
-            if (!item || !options) {
-                initListeningMode();
-                return;
-            }
-            
-            const answered = selectedAnswer !== null;
-            const correct = selectedAnswer === item.answer;
-            
-            // NOUVEAU: Numéro de question
-            const questionNum = Math.floor(Math.random() * 100) + 1;
-            
-            area.innerHTML = `
-                ${renderQuizHeader(1, LISTENING.length, "Compréhension Orale")}
-                <h3 style="margin-bottom:8px;">👂 Compréhension Orale</h3>
-                <p style="color:#6B7280; font-size:0.85rem; margin-bottom:12px;">Écoutez et choisissez la bonne image</p>
-                <button class="audio-btn" id="audio-btn">🔊</button>
-                <div class="quiz-options" id="listen-opts">
-                    ${options.map(opt => {
-                        let cls = 'quiz-btn';
-                        if (answered) {
-                            if (opt === item.answer) cls += ' correct';
-                            else if (opt === selectedAnswer) cls += ' wrong';
-                        }
-                        return `<button class="${cls}" data-opt="${opt}" ${answered ? 'disabled' : ''}><span style="font-size:2rem;">${opt}</span></button>`;
-                    }).join('')}
-                </div>
-                <div id="listen-result"></div>
-            `;
-            
-            document.getElementById('audio-btn').addEventListener('click', () => speak(item.audio));
-            
-            if (!answered) {
-                document.querySelectorAll('#listen-opts .quiz-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const choice = btn.dataset.opt;
-                        if (choice === item.answer) {
-                            addXP(15, 'listening', true);
-                        } else {
-                            breakStreak();
-                        }
-                        renderListening(choice);
-                    });
-                });
-            }
-            
-            if (answered) {
-                document.getElementById('listen-result').innerHTML = `
-                    <div class="feedback ${correct ? 'success' : 'error'}" style="margin-top:16px;">
-                        ${correct ? '🎉 Correct !' : '❌ La bonne réponse était : ' + item.answer + '<br><small>Indice : ' + item.hint + '</small>'}
-                    </div>
-                    <button class="btn-action ${correct ? 'success' : 'error'}" id="next-listen">Suivant ▶</button>
-                `;
-                document.getElementById('next-listen').addEventListener('click', () => initListeningMode());
-            }
-        }
-
-        // ==========================================
-        // MODE ROLEPLAY
-        // ==========================================
-        function initRoleplayMode() {
-            currentRoleplayItem = ROLEPLAY[Math.floor(Math.random() * ROLEPLAY.length)];
-            renderRoleplay(null);
-        }
-
-        function renderRoleplay(selectedAnswer) {
-            const item = currentRoleplayItem;
-            const area = document.getElementById('game-area');
-            
-            if (!item) {
-                initRoleplayMode();
-                return;
-            }
-            
-            const answered = selectedAnswer !== null;
-            const correct = selectedAnswer === item.correct;
-            
-            area.innerHTML = `
-                ${renderQuizHeader(1, ROLEPLAY.length, "Scénario " + item.scene)}
-                <div class="scenario-box">
-                    <div class="scenario-title">💬 ${item.scene}</div>
-                    <div class="dialogue">${item.ctx}</div>
-                </div>
-                <p style="font-size:0.85rem; color:#6B7280; margin-bottom:12px;">Choisissez la bonne réponse :</p>
-                <div style="display:flex; flex-direction:column; gap:8px;">
-                    ${item.opts.map((o, i) => `<button class="quiz-btn ${answered && i === item.correct ? 'correct' : ''} ${answered && i === selectedAnswer && i !== item.correct ? 'wrong' : ''}" data-idx="${i}" ${answered ? 'disabled' : ''} style="text-align:left;">${o}</button>`).join('')}
-                </div>
-                <div id="role-result"></div>
-            `;
-            
-            if (answered) {
-                if (correct) {
-                    addXP(20, 'roleplay', true);
-                } else {
-                    breakStreak();
-                }
-                document.getElementById('role-result').innerHTML = `
-                    <div class="feedback ${correct ? 'success' : 'error'}" style="margin-top:16px;">
-                        ${correct ? '🎭 Excellent !' : 'Pas tout à fait...'}
-                    </div>
-                    <div class="scenario-box" style="background:#EFF6FF; margin-top:12px;">
-                        💡 ${item.fb}
-                    </div>
-                    <button class="btn-action primary" id="next-role" style="margin-top:12px;">Suivant ▶</button>
-                `;
-                document.getElementById('next-role').addEventListener('click', () => initRoleplayMode());
-            } else {
-                document.querySelectorAll('[data-idx]').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const idx = parseInt(btn.dataset.idx);
-                        renderRoleplay(idx);
-                    });
-                });
-            }
-        }
-
-        // ==========================================
-        // MODE FALSE FRIENDS
-        // ==========================================
-        function initFalseFriendsMode() {
-            currentFalseFriendItem = FALSE_FRIENDS[Math.floor(Math.random() * FALSE_FRIENDS.length)];
-            currentFalseFriendOptions = shuffle([currentFalseFriendItem.correct, currentFalseFriendItem.trap, "Other", "None"]);
-            renderFalseFriends(null);
-        }
-
-        function renderFalseFriends(selectedAnswer) {
-            const item = currentFalseFriendItem;
-            const opts = currentFalseFriendOptions;
-            const area = document.getElementById('game-area');
-            
-            if (!item || !opts) {
-                initFalseFriendsMode();
-                return;
-            }
-            
-            const answered = selectedAnswer !== null;
-            const correct = selectedAnswer === item.correct;
-            
-            area.innerHTML = `
-                ${renderQuizHeader(1, FALSE_FRIENDS.length, "Faux Amis")}
-                <div class="warning-badge">⚠️ Attention aux pièges !</div>
-                <p style="color:#6B7280; font-size:0.9rem;">Comment dit-on en anglais ?</p>
-                <div class="quiz-word">${item.fr}</div>
-                <div class="quiz-options">
-                    ${opts.map(o => `<button class="quiz-btn ${answered && o === item.correct ? 'correct' : ''} ${answered && o === selectedAnswer && o !== item.correct ? 'wrong' : ''}" data-opt="${o}" ${answered ? 'disabled' : ''}>${o}</button>`).join('')}
-                </div>
-                <div id="false-result"></div>
-            `;
-            
-            if (answered) {
-                if (correct) {
-                    addXP(15, 'falsefriends', true);
-                } else {
-                    breakStreak();
-                }
-                document.getElementById('false-result').innerHTML = `
-                    <div class="feedback ${correct ? 'success' : 'error'}" style="margin-top:16px;">
-                        ${correct ? '✅ Bien joué !' : '❌ Réponse : ' + item.correct}
-                    </div>
-                    <div class="scenario-box" style="background:#FEF3C7; margin-top:12px; color:#92400E;">
-                        💡 ${item.exp}
-                    </div>
-                    <button class="btn-action primary" style="background:#D97706; margin-top:12px;" id="next-false">Suivant ▶</button>
-                `;
-                document.getElementById('next-false').addEventListener('click', () => initFalseFriendsMode());
-            } else {
-                document.querySelectorAll('[data-opt]').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        renderFalseFriends(btn.dataset.opt);
-                    });
-                });
-            }
-        }
-
-        function renderRecipe() {
-            const item = RECIPES[recipeIdx];
-            userSteps = userSteps.length ? userSteps : shuffle([...item.steps]);
-            const done = userSteps.every((s, i) => s === item.steps[i]);
-            
-            const area = document.getElementById('game-area');
-            area.innerHTML = `
-                ${renderQuizHeader(1, RECIPES.length, "Recette")}
-                <div class="recipe-header">
-                    <div class="recipe-icon">👨‍🍳</div>
-                    <div>
-                        <div style="font-size:0.7rem; color:#D97706;">RECETTE</div>
-                        <div class="recipe-name">${item.name}</div>
-                    </div>
-                </div>
-                <p style="font-size:0.8rem; color:#6B7280; margin-bottom:12px;">👆 Cliquez sur 2 étapes pour les échanger</p>
-                <div class="recipe-steps">
-                    ${userSteps.map((s, i) => `<div class="recipe-step ${selStep === i ? 'selected' : ''} ${done ? 'completed' : ''}" data-step="${i}"><span class="step-num">${done ? '✓' : i + 1}</span>${s}</div>`).join('')}
-                </div>
-                <div id="recipe-result"></div>
-            `;
-            
-            if (done) {
-                addXP(30, 'recipe', true);
-                document.getElementById('recipe-result').innerHTML = `
-                    <div class="feedback success" style="margin-top:16px;">🎉 Recette validée !</div>
-                `;
-            }
-            
-            document.querySelectorAll('[data-step]').forEach(div => {
-                div.addEventListener('click', () => {
-                    const i = parseInt(div.dataset.step);
-                    if (done) return;
-                    if (selStep === null) {
-                        selStep = i;
-                    } else {
-                        [userSteps[selStep], userSteps[i]] = [userSteps[i], userSteps[selStep]];
-                        selStep = null;
-                    }
-                    renderRecipe();
-                });
-            });
-        }
-
-        function renderRush(state) {
-            const area = document.getElementById('game-area');
-            
-            if (state === 'idle') {
-                area.innerHTML = `
-                    ${renderCardCounter(1, 1, "rush")}
-                    <h3 style="display:flex; align-items:center; justify-content:center; gap:8px;">⏱️ Le Rush du Boucher</h3>
-                    <p style="color:#6B7280; font-size:0.9rem; margin:12px 0;">Écrivez vite le mot en anglais !</p>
-                    <div style="background:#FEF3C7; padding:8px 16px; border-radius:20px; display:inline-block; font-weight:bold; color:#92400E; margin-bottom:16px;">🔥 Score : ${rushScore}</div>
-                    <p style="color:#6B7280; margin-bottom:16px;">Prêt ?</p>
-                    <button class="btn-action primary" id="start-rush">▶ Démarrer</button>
-                `;
-                document.getElementById('start-rush').addEventListener('click', () => startRush());
-                return;
-            }
-            
-            if (state === 'win') {
-                area.innerHTML = `
-                    <div style="font-size:3rem; margin-bottom:8px;">✅</div>
-                    <div style="color:#10B981; font-weight:bold; font-size:1.3rem;">Correct !</div>
-                    <div style="color:#6B7280; margin:8px 0 16px;">${rushItem.en}</div>
-                    <button class="btn-action success" id="next-rush">Suivant ▶</button>
-                `;
-                document.getElementById('next-rush').addEventListener('click', () => startRush());
-                return;
-            }
-            
-            if (state === 'lose') {
-                area.innerHTML = `
-                    <div style="font-size:3rem; margin-bottom:8px;">❌</div>
-                    <div style="color:#EF4444; font-weight:bold; font-size:1.3rem;">Temps écoulé !</div>
-                    <div style="color:#6B7280;">La réponse était :</div>
-                    <div style="font-size:1.3rem; font-weight:bold; margin-bottom:16px;">${rushItem.en}</div>
-                    <div style="display:flex; gap:8px;">
-                        <button class="btn-action primary" style="flex:1; background:#6B7280;" id="reset-rush">Réinitialiser</button>
-                        <button class="btn-action primary" style="flex:1;" id="cont-rush">Continuer ▶</button>
-                    </div>
-                `;
-                document.getElementById('reset-rush').addEventListener('click', () => { rushScore = 0; renderRush('idle'); });
-                document.getElementById('cont-rush').addEventListener('click', () => startRush());
-                return;
-            }
-            
-            // Playing
-            area.innerHTML = `
-                <div style="background:#FEF3C7; padding:8px 16px; border-radius:20px; display:inline-block; font-weight:bold; color:#92400E; margin-bottom:12px;">🔥 Score : ${rushScore}</div>
-                <div class="rush-timer-bar"><div class="rush-timer-fill" id="timer-fill" style="width:100%; background:#10B981;"></div></div>
-                <div class="rush-time" id="timer-text" style="color:#10B981;">15.0s</div>
-                <div class="rush-word">Traduisez :</div>
-                <div class="rush-translation">${rushItem.fr}</div>
-                <input type="text" class="rush-input" id="rush-input" placeholder="Écrivez en anglais..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
-                <p style="font-size:0.75rem; color:#9CA3AF; margin-top:8px;">L'article (the/a/an) est optionnel</p>
-            `;
-            
-            const input = document.getElementById('rush-input');
-            input.focus();
-            
-            const normalize = s => s.toLowerCase().trim().replace(/^(the|a|an)\s/, '').split('/')[0].trim();
-            
-            input.addEventListener('input', () => {
-                if (normalize(input.value) === normalize(rushItem.en)) {
-                    clearInterval(rushTimer);
-                    addXP(25, 'rush', true);
-                    rushScore++;
-                    renderRush('win');
-                }
-            });
-            
-            rushTimer = setInterval(() => {
-                rushTime -= 0.1;
-                const pct = (rushTime / 15) * 100;
-                const fill = document.getElementById('timer-fill');
-                const txt = document.getElementById('timer-text');
-                if (fill && txt) {
-                    fill.style.width = pct + '%';
-                    txt.textContent = rushTime.toFixed(1) + 's';
-                    if (rushTime > 5) { fill.style.background = '#10B981'; txt.style.color = '#10B981'; }
-                    else if (rushTime > 2) { fill.style.background = '#F59E0B'; txt.style.color = '#F59E0B'; }
-                    else { fill.style.background = '#EF4444'; txt.style.color = '#EF4444'; }
-                }
-                if (rushTime <= 0) {
-                    clearInterval(rushTimer);
-                    breakStreak();
-                    renderRush('lose');
-                }
-            }, 100);
-        }
-
-        function startRush() {
-            const all = Object.values(DATABASE).flat();
-            rushItem = all[Math.floor(Math.random() * all.length)];
-            rushTime = 15;
-            renderRush('play');
-        }
-
-        // ==========================================
-        // MODE IMAGE
-        // ==========================================
-        function initImageMode() {
-            currentImageItem = IMAGES[Math.floor(Math.random() * IMAGES.length)];
-            renderImage({ desc: '', done: false });
-        }
-
-        function renderImage(state) {
-            const item = currentImageItem;
-            const area = document.getElementById('game-area');
-            
-            if (!item) {
-                initImageMode();
-                return;
-            }
-            
-            if (state.done) {
-                const used = item.vocab.filter(w => state.desc.toLowerCase().includes(w.toLowerCase()));
-                const score = Math.min(100, 50 + used.length * 10 + (state.desc.length > 50 ? 10 : 0));
-                let earned = score >= 90 ? 30 : score >= 70 ? 20 : score >= 50 ? 10 : 5;
-                addXP(earned, 'image', true);
-                
-                area.innerHTML = `
-                    ${renderQuizHeader(1, IMAGES.length, "Description d'image")}
-                    <div class="img-container">
-                        <img src="${item.url}" style="height:100px;">
-                    </div>
-                    <div class="result-box">
-                        <div class="result-score">${score >= 80 ? '🌟' : '👍'}</div>
-                        <div class="result-percent">${score}%</div>
-                        <div style="color:#15803D; font-size:0.85rem;">+${earned} XP</div>
-                    </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
-                        <div style="background:#F9FAFB; padding:8px; border-radius:8px;">
-                            <div style="font-size:0.7rem; color:#6B7280;">Vocabulaire utilisé ✓</div>
-                            <div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:4px;">
-                                ${used.length ? used.map(w => `<span style="background:#D1FAE5; color:#065F46; padding:2px 6px; border-radius:8px; font-size:0.7rem;">${w}</span>`).join('') : '<span style="font-size:0.7rem; color:#9CA3AF;">Aucun</span>'}
-                            </div>
-                        </div>
-                    </div>
-                    <button class="btn-action success" id="next-img">Suivant 📷</button>
-                `;
-                document.getElementById('next-img').addEventListener('click', () => initImageMode());
-                return;
-            }
-            
-            area.innerHTML = `
-                ${renderQuizHeader(1, IMAGES.length, "Description d'image")}
-                <div class="img-container">
-                    <img src="${item.url}">
-                    <div class="img-overlay"><div class="img-title">${item.title}</div></div>
-                </div>
-                <div class="vocab-box">
-                    <div class="vocab-title">💡 Vocabulaire utile :</div>
-                    <div class="vocab-tags">${item.vocab.map(w => `<span class="vocab-tag">${w}</span>`).join('')}</div>
-                </div>
-                <textarea class="desc-input" id="desc-input" placeholder="Write in English... (min. 10 characters)">${state.desc}</textarea>
-                <div class="char-count" id="char-count">${state.desc.length} caractères</div>
-                <button class="btn-action primary" id="submit-img" ${state.desc.length < 10 ? 'disabled' : ''}>Soumettre</button>
-            `;
-            
-            const input = document.getElementById('desc-input');
-            const count = document.getElementById('char-count');
-            const btn = document.getElementById('submit-img');
-            
-            input.addEventListener('input', () => {
-                count.textContent = input.value.length + ' caractères';
-                count.style.color = input.value.length >= 10 ? '#10B981' : '#9CA3AF';
-                btn.disabled = input.value.length < 10;
-            });
-            
-            btn.addEventListener('click', () => renderImage({ desc: input.value, done: true }));
-        }
-
-        // ==========================================
-        // NOUVEAU: MODULE RÉDACTION AVEC IA
-        // ==========================================
-        function initWritingMode() {
-            currentWritingPrompt = WRITING_PROMPTS[Math.floor(Math.random() * WRITING_PROMPTS.length)];
-            renderWriting({ text: '', submitted: false, correction: null });
-        }
-
-        async function renderWriting(state) {
-            const area = document.getElementById('game-area');
-            const prompt = currentWritingPrompt;
-            
-            if (!prompt) {
-                initWritingMode();
-                return;
-            }
-            
-            // Configuration API
-            if (!state.submitted) {
-                area.innerHTML = `
-                    ${renderQuizHeader(1, WRITING_PROMPTS.length, "Rédaction")}
-                    
-                    <div class="writing-section">
-                        <div class="writing-prompt">✍️ <strong>${prompt.topic}</strong></div>
-                        <p style="font-size:0.85rem; color:#6B7280; margin-bottom:12px;">${prompt.prompt}</p>
-                        <textarea class="writing-textarea" id="writing-input" placeholder="Write your text in English...">${state.text}</textarea>
-                        <div class="char-count" id="word-count">${countWords(state.text)} mots (min. ${prompt.minWords})</div>
-                    </div>
-                    
-                    <div style="background:#F9FAFB; padding:10px; border-radius:8px; margin-bottom:12px;">
-                        <div style="font-size:0.75rem; color:#6B7280; margin-bottom:6px;">🔑 Clé API OpenAI (optionnelle)</div>
-                        <input type="password" class="api-key-input" id="api-key" placeholder="sk-..." value="${apiKey}">
-                        <div id="api-status" class="api-status ${apiKey ? 'connected' : 'disconnected'}">
-                            ${apiKey ? '✓ API configurée' : 'Mode basique (sans IA)'}
-                        </div>
-                    </div>
-                    
-                    <button class="btn-action primary" id="submit-writing" ${countWords(state.text) < prompt.minWords ? 'disabled' : ''}>
-                        ${apiKey ? '🤖 Corriger avec IA' : '📝 Soumettre'}
-                    </button>
-                `;
-                
-                const input = document.getElementById('writing-input');
-                const wordCount = document.getElementById('word-count');
-                const submitBtn = document.getElementById('submit-writing');
-                const apiKeyInput = document.getElementById('api-key');
-                
-                input.addEventListener('input', () => {
-                    const words = countWords(input.value);
-                    wordCount.textContent = `${words} mots (min. ${prompt.minWords})`;
-                    wordCount.style.color = words >= prompt.minWords ? '#10B981' : '#EF4444';
-                    submitBtn.disabled = words < prompt.minWords;
-                });
-                
-                apiKeyInput.addEventListener('change', () => {
-                    apiKey = apiKeyInput.value;
-                    try { localStorage.setItem('butcherAPIKey', apiKey); } catch(e) {}
-                    submitBtn.textContent = apiKey ? '🤖 Corriger avec IA' : '📝 Soumettre';
-                    document.getElementById('api-status').className = `api-status ${apiKey ? 'connected' : 'disconnected'}`;
-                    document.getElementById('api-status').textContent = apiKey ? '✓ API configurée' : 'Mode basique (sans IA)';
-                });
-                
-                submitBtn.addEventListener('click', async () => {
-                    const text = input.value.trim();
-                    submitBtn.textContent = '⏳ Analyse en cours...';
-                    submitBtn.disabled = true;
-                    
-                    let correction;
-                    if (apiKey) {
-                        correction = await correctWithAI(text, prompt);
-                    } else {
-                        correction = basicCorrection(text, prompt);
-                    }
-                    
-                    renderWriting({ text, submitted: true, correction });
-                });
-                
-                return;
-            }
-            
-            // Afficher les résultats
-            const correction = state.correction;
-            const earnedXP = calculateWritingXP(state.text, correction);
-            addXP(earnedXP, 'writing', true);
-            
-            area.innerHTML = `
-                ${renderQuizHeader(1, WRITING_PROMPTS.length, "Rédaction")}
-                
-                <div class="writing-section" style="background:#F0FDF4; border-color:#86EFAC;">
-                    <div class="writing-prompt" style="color:#166534;">✅ Votre texte</div>
-                    <div style="font-size:0.85rem; color:#374151; line-height:1.6;">${state.text}</div>
-                </div>
-                
-                <div class="ai-correction">
-                    <div class="ai-correction-title">
-                        ${apiKey ? '🤖 Correction IA' : '📝 Suggestions'}
-                    </div>
-                    
-                    ${correction.errors.length > 0 ? correction.errors.map(err => `
-                        <div class="correction-item">
-                            <div>
-                                <span class="correction-original">${err.original}</span>
-                                → <span class="correction-corrected">${err.corrected}</span>
-                            </div>
-                            ${err.explanation ? `<div class="correction-explanation">💡 ${err.explanation}</div>` : ''}
-                        </div>
-                    `).join('') : '<div style="color:#059669; font-weight:600;">🎉 Excellent travail ! Aucune erreur détectée.</div>'}
-                    
-                    ${correction.suggestions ? `
-                        <div style="margin-top:12px; padding-top:12px; border-top:1px solid #DBEAFE;">
-                            <div style="font-weight:600; color:#1E40AF; font-size:0.85rem; margin-bottom:6px;">💡 Améliorations suggérées</div>
-                            <div style="font-size:0.85rem; color:#374151;">${correction.suggestions}</div>
-                        </div>
-                    ` : ''}
-                </div>
-                
-                <div class="result-box" style="margin-top:12px;">
-                    <div class="result-score">${correction.score >= 80 ? '🌟' : correction.score >= 60 ? '👍' : '💪'}</div>
-                    <div class="result-percent">${correction.score}%</div>
-                    <div style="color:#15803D; font-size:0.85rem;">+${earnedXP} XP</div>
-                </div>
-                
-                <button class="btn-action success" id="next-writing">Nouveau sujet ▶</button>
-            `;
-            
-            document.getElementById('next-writing').addEventListener('click', () => initWritingMode());
-        }
-
-        function countWords(text) {
-            return text.trim().split(/\s+/).filter(w => w.length > 0).length;
-        }
-
-        function calculateWritingXP(text, correction) {
-            const wordCount = countWords(text);
-            const baseXP = Math.min(30, wordCount * 0.5); // Max 30 XP de base
-            const qualityBonus = correction.score >= 90 ? 20 : correction.score >= 70 ? 10 : 0;
-            return Math.round(baseXP + qualityBonus);
-        }
-
-        // Correction basique sans IA
-        function basicCorrection(text, prompt) {
-            const errors = [];
-            const suggestions = [];
-            
-            // Vérifications grammaticales basiques
-            const commonErrors = [
-                { pattern: /\bi\b/g, correction: 'I', explanation: "'I' (je) toujours en majuscule" },
-                { pattern: /\bim\b/gi, correction: "I'm", explanation: "Contraction de 'I am'" },
-                { pattern: /\bdont\b/gi, correction: "don't", explanation: "Contraction de 'do not'" },
-                { pattern: /\bcant\b/gi, correction: "can't", explanation: "Contraction de 'cannot'" },
-                { pattern: /\bwont\b/gi, correction: "won't", explanation: "Contraction de 'will not'" },
-                { pattern: /\bthats\b/gi, correction: "that's", explanation: "Contraction de 'that is'" },
-                { pattern: /\bits a\b/gi, correction: "it's a", explanation: "'it's' = 'it is', 'its' = possessif" },
-                { pattern: /\byour welcome\b/gi, correction: "you're welcome", explanation: "'you're' = 'you are'" },
-                { pattern: /\bshould of\b/gi, correction: "should have", explanation: "Pas 'of' mais 'have'" },
-                { pattern: /\bwould of\b/gi, correction: "would have", explanation: "Pas 'of' mais 'have'" }
-            ];
-            
-            commonErrors.forEach(err => {
-                const matches = text.match(err.pattern);
-                if (matches) {
-                    errors.push({
-                        original: matches[0],
-                        corrected: err.correction,
-                        explanation: err.explanation
-                    });
-                }
-            });
-            
-            // Vérifier la longueur
-            const wordCount = countWords(text);
-            if (wordCount < prompt.minWords) {
-                suggestions.push(`Votre texte est court (${wordCount} mots). Essayez d'ajouter plus de détails.`);
-            }
-            
-            // Calculer le score
-            let score = 100;
-            score -= errors.length * 10;
-            score = Math.max(0, score);
-            
-            return {
-                errors,
-                suggestions: suggestions.length > 0 ? suggestions.join(' ') : "Continuez à pratiquer ! L'anglais s'améliore avec la pratique régulière.",
-                score
-            };
-        }
-
-        // Correction avec OpenAI API
-        async function correctWithAI(text, prompt) {
-            try {
-                const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`
-                    },
-                    body: JSON.stringify({
-                        model: 'gpt-3.5-turbo',
-                        messages: [
-                            {
-                                role: 'system',
-                                content: `Tu es un professeur d'anglais professionnel spécialisé dans le vocabulaire de boucherie. 
-                                Corrige le texte de l'étudiant et fournis des explications claires en français.
-                                Réponds UNIQUEMENT en format JSON valide avec cette structure:
-                                {
-                                    "errors": [{"original": "texte original", "corrected": "correction", "explanation": "explication en français"}],
-                                    "suggestions": "suggestions d'amélioration en français",
-                                    "score": nombre entre 0 et 100,
-                                    "improvedText": "version corrigée complète du texte"
-                                }`
-                            },
-                            {
-                                role: 'user',
-                                content: `Sujet: ${prompt.topic}\nConsigne: ${prompt.prompt}\n\nTexte de l'étudiant:\n${text}`
-                            }
-                        ],
-                        temperature: 0.3,
-                        max_tokens: 1000
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error('API error');
-                }
-                
-                const data = await response.json();
-                const content = data.choices[0].message.content;
-                
-                // Parser la réponse JSON
-                try {
-                    const result = JSON.parse(content);
-                    return {
-                        errors: result.errors || [],
-                        suggestions: result.suggestions || '',
-                        score: result.score || 70,
-                        improvedText: result.improvedText || text
-                    };
-                } catch (parseError) {
-                    console.error('Parse error:', parseError);
-                    return basicCorrection(text, prompt);
-                }
-                
-            } catch (error) {
-                console.error('AI correction error:', error);
-                // Fallback vers correction basique
-                return basicCorrection(text, prompt);
-            }
-        }
-
-        // ==========================================
-        // CHANGEMENT DE MODE
-        // ==========================================
-        function setMode(m) {
-            if (rushTimer) clearInterval(rushTimer);
-            mode = m;
-            renderModeMenu();
-            showThemeMenu(m === 'flashcard' || m === 'quiz');
-            
-            if (m === 'flashcard') { deck = shuffle([...DATABASE[theme]]); idx = 0; flipped = false; renderFlashcard(); }
-            else if (m === 'quiz') { deck = shuffle([...DATABASE[theme]]); idx = 0; renderQuiz(); }
-            else if (m === 'listening') initListeningMode();
-            else if (m === 'roleplay') initRoleplayMode();
-            else if (m === 'falsefriends') initFalseFriendsMode();
-            else if (m === 'recipe') { recipeIdx = Math.floor(Math.random() * RECIPES.length); userSteps = []; selStep = null; renderRecipe(); }
-            else if (m === 'rush') renderRush('idle');
-            else if (m === 'image') initImageMode();
-            else if (m === 'writing') initWritingMode();
-        }
-
-        function setTheme(t) {
-            theme = t;
-            showThemeMenu(true);
-            deck = shuffle([...DATABASE[theme]]);
-            idx = 0;
-            flipped = false;
-            if (mode === 'flashcard') renderFlashcard();
-            else if (mode === 'quiz') renderQuiz();
-        }
-
-        // ==========================================
-        // INITIALISATION
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('start-btn').addEventListener('click', () => {
-                document.getElementById('home-screen').style.display = 'none';
-                document.getElementById('game-screen').style.display = 'flex';
-                renderModeMenu();
-                updateProgress();
-                setMode('flashcard');
-            });
-            
-            document.getElementById('home-btn').addEventListener('click', () => {
-                if (rushTimer) clearInterval(rushTimer);
-                document.getElementById('game-screen').style.display = 'none';
-                document.getElementById('home-screen').style.display = 'flex';
-            });
-            
-            document.getElementById('mode-menu').addEventListener('click', (e) => {
-                if (e.target.dataset.mode) setMode(e.target.dataset.mode);
-            });
-            
-            document.getElementById('theme-menu').addEventListener('click', (e) => {
-                if (e.target.dataset.theme) setTheme(e.target.dataset.theme);
-            });
-            
-            // Afficher progression sur accueil
-            if (xp > 0) {
-                const L = getLevel();
-                document.getElementById('home-progress').innerHTML = `
-                    <div style="background:white; border-radius:12px; padding:12px; margin-bottom:16px; width:100%; max-width:320px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <span style="font-size:1.5rem;">${L.icon}</span>
-                            <div style="flex:1;">
-                                <div style="font-weight:bold; color:#92400E; font-size:0.85rem;">Niveau ${L.lvl} · ${L.name}</div>
-                                <div style="font-size:0.75rem; color:#B45309;">${xp} XP gagnés</div>
-                                ${streak > 0 ? `<div style="font-size:0.7rem; color:#D97706;">🔥 ${streak} réponses consécutives</div>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('home-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'flex';
+            initThemes();
+            updateUI();
+            render();
         });
-        
-        // iOS standalone mode fix
-        if (window.navigator.standalone) {
-            document.body.classList.add('standalone');
+
+        document.getElementById('home-btn').addEventListener('click', () => {
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('home-screen').style.display = 'flex';
+        });
+
+        document.querySelectorAll('#mode-menu .menu-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('#mode-menu .menu-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                state.mode = e.target.getAttribute('data-mode');
+                state.cardIdx = 0;
+                state.quizIdx = 0;
+                state.examIdx = 0;
+                state.examScore = 0;
+                state.roleplayIdx = 0;
+                state.selectedAnimal = null;
+                render();
+            });
+        });
+
+        function initThemes() {
+            const themeMenu = document.getElementById('theme-menu');
+            themeMenu.innerHTML = Object.keys(DATABASE).map(t => 
+                `<button class="menu-btn ${t === state.theme ? 'active' : ''}" data-theme="${t}">${t}</button>`
+            ).join('');
+
+            themeMenu.querySelectorAll('.menu-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    themeMenu.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    state.theme = e.target.getAttribute('data-theme');
+                    state.cardIdx = 0;
+                    state.quizIdx = 0;
+                    render();
+                });
+            });
         }
-        
-        // Réinitialiser le XP quotidien à minuit
-        function checkDailyReset() {
-            const lastDate = localStorage.getItem('butcherLastDate');
-            const today = new Date().toDateString();
-            if (lastDate !== today) {
-                dailyXP = 0;
-                localStorage.setItem('butcherDailyXP', '0');
-                localStorage.setItem('butcherLastDate', today);
+
+        function addXP(amount) {
+            state.xp += amount;
+            localStorage.setItem('butcher_xp', state.xp);
+            updateUI();
+        }
+
+        function updateUI() {
+            document.getElementById('xp-display').textContent = state.xp + " XP";
+            let lvl = Math.floor(state.xp / 30) + 1;
+            let prog = state.xp % 30;
+            document.getElementById('lvl-name').textContent = `Niveau ${lvl} · Professionnel`;
+            document.getElementById('lvl-progress').textContent = `${prog} / 30 XP`;
+            document.getElementById('progress-fill').style.width = `${(prog / 30) * 100}%`;
+        }
+
+        function render() {
+            const area = document.getElementById('game-area');
+            const themeData = DATABASE[state.theme];
+
+            if (state.mode === 'flashcards') {
+                const item = themeData[state.cardIdx];
+                area.innerHTML = `
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px; text-transform:uppercase;">${state.theme} (${state.cardIdx + 1}/${themeData.length})</div>
+                    <div class="flashcard" id="card-box">
+                        <div style="font-size:0.75rem; color:#94a3b8; font-weight:700;">${state.isFlipped ? 'ANGLAIS (ENGLISH)' : 'FRANÇAIS'}</div>
+                        <div class="card-word" style="color: ${state.isFlipped ? '#991b1b' : '#1e293b'}">${state.isFlipped ? item.en : item.fr}</div>
+                        ${state.isFlipped ? `<div style="font-style:italic; color:#64748b; font-size:0.85rem; margin-top:8px;">"${item.ex}"</div>` : ''}
+                        <div style="font-size:0.75rem; color:#94a3b8; margin-top:12px;">👆 Touchez pour retourner</div>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-action" id="prev-card" style="background:#e2e8f0; color:#334155;">⬅️ Précédent</button>
+                        <button class="btn-action" id="next-card">Suivant ➡️</button>
+                    </div>
+                `;
+
+                document.getElementById('card-box').addEventListener('click', () => {
+                    state.isFlipped = !state.isFlipped;
+                    render();
+                });
+
+                document.getElementById('next-card').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    state.cardIdx = (state.cardIdx + 1) % themeData.length;
+                    state.isFlipped = false;
+                    addXP(1);
+                    render();
+                });
+
+                document.getElementById('prev-card').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    state.cardIdx = (state.cardIdx - 1 + themeData.length) % themeData.length;
+                    state.isFlipped = false;
+                    render();
+                });
+
+            } else if (state.mode === 'quiz') {
+                const item = themeData[state.quizIdx % themeData.length];
+                let opts = [item.en];
+                while(opts.length < 4) {
+                    let rand = themeData[Math.floor(Math.random() * themeData.length)].en;
+                    if(!opts.includes(rand)) opts.push(rand);
+                }
+                opts.sort(() => Math.random() - 0.5);
+
+                area.innerHTML = `
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:12px;">QUIZ TRADUCTION</div>
+                    <div class="card-word" style="font-size:1.5rem; margin-bottom:20px;">${item.fr}</div>
+                    <div class="quiz-options">
+                        ${opts.map(o => `<button class="quiz-btn" data-val="${o}">${o}</button>`).join('')}
+                    </div>
+                    <div id="quiz-fb" style="margin-top:12px; font-weight:600;"></div>
+                `;
+
+                area.querySelectorAll('.quiz-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const val = e.target.getAttribute('data-val');
+                        const fb = document.getElementById('quiz-fb');
+                        area.querySelectorAll('.quiz-btn').forEach(b => b.disabled = true);
+                        if(val === item.en) {
+                            e.target.classList.add('correct');
+                            fb.innerHTML = `<span style="color:#166534;">✨ Excellent ! +2 XP</span>`;
+                            addXP(2);
+                        } else {
+                            e.target.classList.add('wrong');
+                            fb.innerHTML = `<span style="color:#991b1b;">❌ Erreur. C'était : ${item.en}</span>`;
+                        }
+                        setTimeout(() => {
+                            state.quizIdx++;
+                            render();
+                        }, 1400);
+                    });
+                });
+
+            } else if (state.mode === 'matching') {
+                let animals = MATCHING_PAIRS.map(p => p.animal).sort(() => Math.random() - 0.5);
+                let parts = MATCHING_PAIRS.map(p => p.part).sort(() => Math.random() - 0.5);
+
+                area.innerHTML = `
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px;">APPARIEMENT : ANIMAL & MORCEAU</div>
+                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:12px;">Associez chaque animal à son morceau :</p>
+                    <div class="match-grid">
+                        <div>
+                            <div style="font-size:0.7rem; font-weight:700; color:#991b1b; margin-bottom:6px;">ANIMAUX</div>
+                            ${animals.map(a => `<div class="match-card animal-card" data-val="${a}">${a}</div>`).join('')}
+                        </div>
+                        <div>
+                            <div style="font-size:0.7rem; font-weight:700; color:#991b1b; margin-bottom:6px;">MORCEAUX</div>
+                            ${parts.map(p => `<div class="match-card part-card" data-val="${p}">${p}</div>`).join('')}
+                        </div>
+                    </div>
+                    <div id="match-fb" style="font-weight:600; font-size:0.85rem; margin-top:8px;"></div>
+                `;
+
+                let selectedAnimal = null;
+                area.querySelectorAll('.animal-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        area.querySelectorAll('.animal-card').forEach(c => c.classList.remove('selected'));
+                        e.target.classList.add('selected');
+                        selectedAnimal = e.target.getAttribute('data-val');
+                    });
+                });
+
+                area.querySelectorAll('.part-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        if(!selectedAnimal) {
+                            alert("Sélectionnez d'abord un animal à gauche !");
+                            return;
+                        }
+                        const part = e.target.getAttribute('data-val');
+                        const isValid = MATCHING_PAIRS.some(p => p.animal === selectedAnimal && p.part === part);
+                        const fb = document.getElementById('match-fb');
+
+                        if(isValid) {
+                            e.target.classList.add('matched');
+                            area.querySelectorAll('.animal-card').forEach(c => {
+                                if(c.getAttribute('data-val') === selectedAnimal) c.classList.add('matched');
+                            });
+                            fb.innerHTML = `<span style="color:#166534;">✨ Bonne association ! +2 XP</span>`;
+                            addXP(2);
+                            selectedAnimal = null;
+                        } else {
+                            fb.innerHTML = `<span style="color:#991b1b;">❌ Mauvaise association, réessayez.</span>`;
+                        }
+                    });
+                });
+
+            } else if (state.mode === 'exam') {
+                let allItems = Object.values(DATABASE).flat();
+                if(state.examIdx >= 10) {
+                    let grade = (state.examScore / 10) * 20;
+                    area.innerHTML = `
+                        <h2>🎓 Bilan de l'Examen</h2>
+                        <p style="font-size:2rem; font-weight:800; color:#991b1b; margin:16px 0;">${grade} / 20</p>
+                        <p style="color:#64748b; margin-bottom:20px;">(${state.examScore} bonnes réponses sur 10)</p>
+                        <button class="btn-action" id="restart-exam">Recommencer l'examen</button>
+                    `;
+                    document.getElementById('restart-exam').addEventListener('click', () => {
+                        state.examIdx = 0;
+                        state.examScore = 0;
+                        render();
+                    });
+                    return;
+                }
+
+                let currentQ = allItems[state.examIdx % allItems.length];
+                let opts = [currentQ.en];
+                while(opts.length < 4) {
+                    let rand = allItems[Math.floor(Math.random() * allItems.length)].en;
+                    if(!opts.includes(rand)) opts.push(rand);
+                }
+                opts.sort(() => Math.random() - 0.5);
+
+                area.innerHTML = `
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px;">EXAMEN (${state.examIdx + 1}/10)</div>
+                    <div class="card-word" style="font-size:1.4rem; margin-bottom:20px;">${currentQ.fr}</div>
+                    <div class="quiz-options">
+                        ${opts.map(o => `<button class="quiz-btn" data-val="${o}">${o}</button>`).join('')}
+                    </div>
+                `;
+
+                area.querySelectorAll('.quiz-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        if(e.target.getAttribute('data-val') === currentQ.en) state.examScore++;
+                        state.examIdx++;
+                        render();
+                    });
+                });
+
+            } else if (state.mode === 'roleplay') {
+                const sc = ROLEPLAY[state.roleplayIdx % ROLEPLAY.length];
+                let shuffledOpts = [...sc.options].sort(() => Math.random() - 0.5);
+
+                area.innerHTML = `
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px;">DÉFIS VENTE CLIENT</div>
+                    <div style="background:#fffbeb; border:1px solid #fde68a; padding:12px; border-radius:12px; font-size:0.85rem; color:#78350f; margin-bottom:14px; text-align:left;">
+                        💬 <b>Situation :</b><br>${sc.situation}
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:8px;" id="roleplay-opts">
+                        ${shuffledOpts.map(o => `<button class="quiz-btn" style="width:100%; text-align:left;" data-correct="${o.correct}">${o.text}</button>`).join('')}
+                    </div>
+                    <div id="rp-fb" style="margin-top:10px; font-weight:600;"></div>
+                `;
+
+                area.querySelectorAll('#roleplay-opts .quiz-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const isCorrect = e.target.getAttribute('data-correct') === 'true';
+                        const fb = document.getElementById('rp-fb');
+                        if(isCorrect) {
+                            e.target.style.background = '#dcfce7';
+                            e.target.style.borderColor = '#22c55e';
+                            fb.innerHTML = `<span style="color:#166534;">✨ Bonne formule ! +3 XP</span>`;
+                            addXP(3);
+                        } else {
+                            e.target.style.background = '#fee2e2';
+                            e.target.style.borderColor = '#ef4444';
+                            fb.innerHTML = `<span style="color:#991b1b;">❌ Ce n'est pas la bonne réponse.</span>`;
+                        }
+                        setTimeout(() => {
+                            state.roleplayIdx++;
+                            render();
+                        }, 1600);
+                    });
+                });
+
+            } else if (state.mode === 'dict') {
+                let allItems = Object.values(DATABASE).flat();
+                area.innerHTML = `
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px;">DICTIONNAIRE TECHNIQUE</div>
+                    <input type="text" class="dict-search" id="dict-input" placeholder="Rechercher un mot (FR ou EN)...">
+                    <div class="dict-list" id="dict-box">
+                        ${allItems.map(i => `<div class="dict-item"><span><b>${i.fr}</b></span><span style="color:#991b1b; font-weight:700;">${i.en}</span></div>`).join('')}
+                    </div>
+                `;
+
+                document.getElementById('dict-input').addEventListener('input', (e) => {
+                    const q = e.target.value.toLowerCase();
+                    const filtered = allItems.filter(i => i.fr.toLowerCase().includes(q) || i.en.toLowerCase().includes(q));
+                    document.getElementById('dict-box').innerHTML = filtered.map(i => `
+                        <div class="dict-item"><span><b>${i.fr}</b></span><span style="color:#991b1b; font-weight:700;">${i.en}</span></div>
+                    `).join('');
+                });
             }
         }
-        checkDailyReset();
     </script>
 </body>
 </html>
