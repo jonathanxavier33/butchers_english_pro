@@ -11,7 +11,7 @@
     <meta name="format-detection" content="telephone=no">
     <title>Butcher's English Pro</title>
     
-    <!-- Icône de raccourci iOS / Android optimisée (Rôti 🥩) -->
+    <!-- Icône de raccourci (Rôti 🥩) -->
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥩</text></svg>">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥩</text></svg>">
     
@@ -25,12 +25,12 @@
         }
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; 
-            background: linear-gradient(180deg, #fef3c7 0%, #fde68a 100%);
+            background: #f8fafc;
             margin: 0; 
             padding: 0; 
             min-height: 100vh;
             min-height: -webkit-fill-available;
-            color: #333; 
+            color: #1e293b; 
             overflow-x: hidden;
         }
 
@@ -41,159 +41,88 @@
             align-items: center; 
             justify-content: center; 
             min-height: 100vh;
-            min-height: -webkit-fill-available;
-            padding: 20px; 
-            padding-top: env(safe-area-inset-top, 20px);
-            padding-bottom: env(safe-area-inset-bottom, 20px);
+            padding: 24px; 
             text-align: center; 
         }
-        #home-screen h1 { font-size: 1.8rem; color: #8B0000; margin-bottom: 8px; }
-        .subtitle { color: #666; margin-bottom: 24px; }
+        #home-screen h1 { font-size: 2rem; color: #991b1b; margin-bottom: 6px; font-weight: 800; }
+        .subtitle { color: #64748b; margin-bottom: 24px; font-size: 0.95rem; font-weight: 500; }
         .image-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 320px; margin-bottom: 24px; }
-        .image-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 16px; }
+        .image-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
         .btn-start { 
-            background: linear-gradient(135deg, #8B0000, #B91C1C); 
+            background: linear-gradient(135deg, #991b1b, #dc2626); 
             color: white; 
             border: none; 
-            padding: 16px 40px; 
-            font-size: 1.1rem; 
-            border-radius: 30px; 
-            font-weight: bold; 
+            padding: 16px 36px; 
+            font-size: 1.05rem; 
+            border-radius: 9999px; 
+            font-weight: 700; 
             cursor: pointer;
-            -webkit-appearance: none;
-            appearance: none;
+            box-shadow: 0 4px 14px rgba(153, 27, 27, 0.3);
+            transition: transform 0.1s ease;
         }
-        .btn-start:active { transform: scale(0.95); }
+        .btn-start:active { transform: scale(0.97); }
 
-        /* JEU */
-        #game-screen { display: none; flex-direction: column; min-height: 100vh; min-height: -webkit-fill-available; }
+        /* JEU & HEADER */
+        #game-screen { display: none; flex-direction: column; min-height: 100vh; }
         
-        header { background: white; border-bottom: 1px solid #E5E7EB; padding: 12px 16px; padding-top: max(12px, env(safe-area-inset-top)); }
+        header { background: white; border-bottom: 1px solid #e2e8f0; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .header-title { font-size: 1rem; font-weight: bold; color: #8B0000; }
-        .btn-home { background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 8px; -webkit-appearance: none; }
+        .header-title { font-size: 1rem; font-weight: 700; color: #991b1b; }
+        .btn-home { background: #f1f5f9; border: none; font-size: 1.2rem; cursor: pointer; padding: 8px 12px; border-radius: 12px; }
 
-        /* Progression */
+        /* Barre de progression moderne */
         .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .level-info { display: flex; align-items: center; gap: 8px; }
-        .level-icon { font-size: 1.5rem; }
-        .level-name { font-weight: bold; font-size: 0.85rem; color: #92400E; }
-        .xp-count { font-weight: bold; color: #92400E; font-size: 0.9rem; }
+        .level-name { font-weight: 700; font-size: 0.85rem; color: #78350f; }
+        .xp-count { font-weight: 700; color: #991b1b; font-size: 0.85rem; background: #fee2e2; padding: 3px 10px; border-radius: 20px; }
 
         .progress-bar-container { 
             width: 100%; 
-            height: 28px; 
-            border-radius: 10px; 
-            background: linear-gradient(90deg, #FEF3C7, #FDE68A);
-            border: 2px solid #F59E0B;
+            height: 12px; 
+            border-radius: 9999px; 
+            background: #e2e8f0;
             overflow: hidden;
             position: relative;
         }
         .progress-bar-fill { 
             height: 100%; 
-            background: linear-gradient(90deg, #991B1B, #DC2626);
-            transition: width 0.5s;
-            position: relative;
+            background: linear-gradient(90deg, #991b1b, #ef4444);
+            border-radius: 9999px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .progress-knife {
-            position: absolute;
-            top: 2px;
-            right: -16px;
-            transform: translateX(-100%);
-            transition: left 0.5s;
-        }
-        
-        .level-labels { 
-            display: flex; 
-            justify-content: space-between; 
-            margin-top: 6px;
-            padding: 0 2px;
-        }
-        .level-label { 
-            font-size: 0.6rem; 
-            color: #9CA3AF;
-            text-align: center;
-            flex: 1;
-            transition: all 0.3s;
-        }
-        .level-label.current { 
-            color: #8B0000; 
-            font-weight: bold;
-            font-size: 0.7rem;
-        }
-        .level-label.passed { color: #991B1B; }
-        
-        .level-dots { display: flex; justify-content: space-between; margin-top: 8px; }
-        .level-dot { 
-            width: 28px; height: 28px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.8rem;
-            background: #E5E7EB;
-        }
-        .level-dot.passed { background: linear-gradient(135deg, #991B1B, #DC2626); }
 
-        /* Menus */
-        .menu-scroll { display: flex; overflow-x: auto; padding: 10px 16px; gap: 8px; background: white; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+        /* Menus défilants */
+        .menu-scroll { display: flex; overflow-x: auto; padding: 12px 16px; gap: 8px; background: white; border-bottom: 1px solid #f1f5f9; white-space: nowrap; scrollbar-width: none; }
+        .menu-scroll::-webkit-scrollbar { display: none; }
         .menu-btn { 
-            background: #F3F4F6; 
-            border: 2px solid #E5E7EB; 
+            background: #f8fafc; 
+            border: 1px solid #e2e8f0; 
             padding: 8px 14px; 
-            border-radius: 20px; 
+            border-radius: 9999px; 
             font-size: 0.8rem; 
             font-weight: 600; 
+            color: #475569;
             cursor: pointer;
-            -webkit-appearance: none;
-            appearance: none;
             flex-shrink: 0;
+            transition: all 0.2s;
         }
-        .menu-btn.active { background: #8B0000; color: white; border-color: #8B0000; }
+        .menu-btn.active { background: #991b1b; color: white; border-color: #991b1b; box-shadow: 0 2px 6px rgba(153, 27, 27, 0.2); }
 
-        /* Zone de jeu */
-        main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 16px; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+        /* Zone de jeu centrale */
+        main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 16px; }
         .game-area { 
             background: white; 
             width: 100%; 
-            max-width: 400px; 
-            padding: 20px; 
-            border-radius: 20px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            min-height: 300px;
+            max-width: 420px; 
+            padding: 24px; 
+            border-radius: 24px; 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f1f5f9;
         }
 
-        .card-counter {
-            background: linear-gradient(135deg, #FEF3C7, #FDE68A);
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #92400E;
-            display: inline-block;
-            margin-bottom: 12px;
-        }
-        
-        .quiz-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        .quiz-number {
-            background: #8B0000;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-        .quiz-theme {
-            font-size: 0.75rem;
-            color: #6B7280;
-        }
-
-        /* Flashcard */
+        /* Flashcards */
         .flashcard { 
-            min-height: 240px; 
+            min-height: 220px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
@@ -201,98 +130,99 @@
             cursor: pointer;
             border-radius: 16px;
             padding: 20px;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            text-align: center;
         }
-        .flashcard-front { background: #F9FAFB; border: 2px solid #E5E7EB; }
-        .flashcard-back { background: linear-gradient(135deg, #FEF2F2, #FEF3C7); border: 2px solid #FECACA; }
-        .card-label { font-size: 0.7rem; text-transform: uppercase; color: #9CA3AF; margin-bottom: 8px; }
-        .card-word { font-size: 1.8rem; font-weight: 800; margin: 8px 0; }
-        .flashcard-front .card-word { color: #1F2937; }
-        .flashcard-back .card-word { color: #991B1B; }
-        .card-example { font-style: italic; color: #6B7280; font-size: 0.9rem; margin-top: 8px; }
-        .card-hint { font-size: 0.75rem; color: #9CA3AF; margin-top: 16px; }
+        .flashcard-back { background: #fff5f5; border-color: #fecaca; }
+        .card-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 8px; font-weight: 700; }
+        .card-word { font-size: 1.75rem; font-weight: 800; margin: 8px 0; color: #1e293b; }
+        .flashcard-back .card-word { color: #991b1b; }
+        .card-example { font-style: italic; color: #64748b; font-size: 0.85rem; margin-top: 8px; }
 
         .controls { display: flex; justify-content: center; gap: 12px; }
-        .btn-icon { width: 44px; height: 44px; border-radius: 50%; border: 2px solid #E5E7EB; background: white; font-size: 1rem; cursor: pointer; -webkit-appearance: none; }
-        .btn-next { background: #8B0000; color: white; border: none; padding: 12px 24px; border-radius: 24px; font-weight: bold; cursor: pointer; -webkit-appearance: none; }
+        .btn-icon { width: 48px; height: 48px; border-radius: 50%; border: 1px solid #e2e8f0; background: white; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .btn-next { background: #991b1b; color: white; border: none; padding: 12px 28px; border-radius: 9999px; font-weight: 700; cursor: pointer; font-size: 0.95rem; }
 
         /* Quiz */
-        .quiz-word { font-size: 1.8rem; font-weight: bold; margin-bottom: 20px; }
+        .quiz-word { font-size: 1.6rem; font-weight: 800; margin-bottom: 20px; text-align: center; color: #1e293b; }
         .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .quiz-btn { 
-            background: #F9FAFB; 
-            border: 2px solid #E5E7EB; 
+            background: #f8fafc; 
+            border: 2px solid #e2e8f0; 
             padding: 14px 10px; 
-            border-radius: 12px; 
+            border-radius: 14px; 
             cursor: pointer; 
             font-weight: 600;
             font-size: 0.9rem;
-            -webkit-appearance: none;
-            appearance: none;
+            color: #334155;
+            transition: all 0.15s;
         }
-        .quiz-btn:active { background: #FEE2E2; border-color: #EF4444; }
-        .quiz-btn.correct { background: #D1FAE5; border-color: #10B981; color: #065F46; }
-        .quiz-btn.wrong { background: #FEE2E2; border-color: #EF4444; color: #991B1B; }
-        .quiz-btn:disabled { cursor: default; opacity: 0.8; }
+        .quiz-btn:active { transform: scale(0.97); }
+        .quiz-btn.correct { background: #dcfce7; border-color: #22c55e; color: #166534; }
+        .quiz-btn.wrong { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+        .quiz-btn:disabled { cursor: default; }
 
-        .feedback { margin-top: 16px; padding: 12px; border-radius: 12px; font-weight: 600; }
-        .feedback.success { background: #D1FAE5; color: #065F46; }
-        .feedback.error { background: #FEE2E2; color: #991B1B; }
-        .btn-action { width: 100%; padding: 12px; border-radius: 24px; border: none; font-weight: bold; cursor: pointer; margin-top: 12px; -webkit-appearance: none; appearance: none; }
-        .btn-action.success { background: #10B981; color: white; }
-        .btn-action.error { background: #EF4444; color: white; }
-        .btn-action.primary { background: #8B0000; color: white; }
-
-        /* Audio */
+        /* Section Orale améliorée */
+        .audio-container { text-align: center; padding: 10px 0; }
         .audio-btn { 
-            width: 90px; height: 90px; 
+            width: 80px; height: 80px; 
             border-radius: 50%; 
-            background: linear-gradient(135deg, #8B0000, #DC2626); 
+            background: linear-gradient(135deg, #991b1b, #dc2626); 
             border: none; 
             color: white; 
-            font-size: 2rem; 
+            font-size: 1.8rem; 
             cursor: pointer; 
             margin: 16px auto;
-            display: block;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-        .audio-btn:active { transform: scale(0.95); }
-
-        /* Streak */
-        .streak-badge {
-            background: linear-gradient(135deg, #F59E0B, #D97706);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 4px;
-            margin-left: 8px;
+            justify-content: center;
+            box-shadow: 0 6px 16px rgba(153, 27, 27, 0.3);
+            transition: transform 0.1s;
         }
+        .audio-btn:active { transform: scale(0.92); }
+        .audio-instruction { font-size: 0.85rem; color: #64748b; margin-bottom: 12px; font-weight: 500; }
+
+        /* Section Image & Identification Précise (Outil, Morceau, Animal) */
+        .image-challenge-box { text-align: center; }
+        .img-preview { width: 100%; height: 160px; object-fit: cover; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+        .identification-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+            text-align: center;
+            margin-bottom: 12px;
+            font-family: inherit;
+        }
+        .identification-input:focus { border-color: #991b1b; }
+
+        .feedback { margin-top: 14px; padding: 12px; border-radius: 12px; font-weight: 600; font-size: 0.9rem; text-align: center; }
+        .feedback.success { background: #dcfce7; color: #166534; }
+        .feedback.error { background: #fee2e2; color: #991b1b; }
+        .btn-action { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; margin-top: 10px; font-size: 0.95rem; background: #991b1b; color: white; }
     </style>
 </head>
 <body>
 
     <!-- ACCUEIL -->
     <div id="home-screen">
-        <div style="font-size: 3rem; margin-bottom: 8px;">🥩</div>
+        <div style="font-size: 3.5rem; margin-bottom: 8px;">🥩</div>
         <h1>Butcher's English Pro</h1>
-        <p class="subtitle">Vocabulaire Technique Boucherie</p>
+        <p class="subtitle">Vocabulaire Technique & Professionnel en Anglais</p>
         
         <div class="image-grid">
             <img src="https://images.unsplash.com/photo-1588347818036-558601350947?w=400&q=80" alt="Boucherie">
             <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80" alt="Viande">
         </div>
         
-        <div id="home-progress"></div>
+        <button class="btn-start" id="start-btn">Commencer l'entraînement</button>
         
-        <button class="btn-start" id="start-btn">Commencer la formation</button>
-        
-        <p style="font-size: 0.7rem; color: #9CA3AF; margin-top: 20px;">
-            📱 Ajoutez à votre écran d'accueil pour retrouver votre rôti en raccourci !
+        <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 24px;">
+            📱 Ajoutez l'app à votre écran d'accueil pour un accès rapide
         </p>
     </div>
 
@@ -300,28 +230,19 @@
     <div id="game-screen">
         <header>
             <div class="header-top">
-                <button class="btn-home" id="home-btn">🏠</button>
+                <button class="btn-home" id="home-btn">🏠 Accueil</button>
                 <span class="header-title">Butcher's English Pro</span>
-                <div style="width:30px;"></div>
-            </div>
-            
-            <div class="progress-header">
-                <div class="level-info">
-                    <span class="level-icon" id="lvl-icon">🔪</span>
-                    <span class="level-name" id="lvl-name">Niveau 1 · Apprenti</span>
-                    <span class="streak-badge" id="streak-badge" style="display:none;">🔥 <span id="streak-count">0</span></span>
-                </div>
                 <span class="xp-count" id="xp-display">0 XP</span>
             </div>
             
-            <div class="progress-bar-container">
-                <div class="progress-bar-fill" id="progress-fill" style="width: 0%;">
-                    <div class="progress-knife" id="progress-knife">🔪</div>
-                </div>
+            <div class="progress-header">
+                <span class="level-name" id="lvl-name">Niveau 1 · Apprenti</span>
+                <span style="font-size: 0.75rem; color: #64748b;" id="level-progress-text">0 / 50 XP</span>
             </div>
             
-            <div class="level-labels" id="level-labels"></div>
-            <div class="level-dots" id="level-dots" style="display:none;"></div>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progress-fill" style="width: 0%;"></div>
+            </div>
         </header>
 
         <nav class="menu-scroll" id="mode-menu"></nav>
@@ -334,46 +255,270 @@
 
     <script>
         // ==========================================
-        // DONNÉES
+        // DONNÉES ET CONFIGURATION DU JEU
         // ==========================================
+        let currentXP = 0;
+        const XP_PER_SUCCESS = 2; // XP rabaissé et équilibré pour un cumul progressif
+
         const DATABASE = {
-            "Viandes": [
+            "Viandes & Animaux": [
                 { fr: "Le bœuf", en: "Beef", ex: "Beef is popular for roast." },
                 { fr: "Le poulet", en: "Chicken", ex: "Free-range chicken." },
                 { fr: "L'agneau", en: "Lamb", ex: "Lamb chops are tasty." },
                 { fr: "Le porc", en: "Pork", ex: "Pork ribs for BBQ." },
                 { fr: "Le veau", en: "Veal", ex: "Veal escalope." }
             ],
-            "Morceaux de Bœuf": [
+            "Morceaux": [
                 { fr: "Le filet de bœuf", en: "Tenderloin", ex: "Beef tenderloin is very tender." },
                 { fr: "Le faux-filet", en: "Sirloin", ex: "Sirloin steak is flavorful." },
                 { fr: "L'entrecôte", en: "Ribeye", ex: "Ribeye steak is well marbled." },
                 { fr: "La côte de bœuf", en: "Prime rib", ex: "Prime rib for Sunday roast." }
             ],
-            "Morceaux de Porc": [
-                { fr: "Le filet mignon de porc", en: "Pork tenderloin", ex: "Pork tenderloin is very lean." },
-                { fr: "L'échine de porc", en: "Pork shoulder", ex: "Pork shoulder is great for roasting." },
-                { fr: "La poitrine de porc", en: "Pork belly", ex: "Pork belly is used for bacon." },
-                { fr: "Les travers de porc", en: "Spare ribs", ex: "Spare ribs for BBQ." }
+            "Outils": [
+                { fr: "Le couteau de chef", en: "Chef's knife", ex: "Use a sharp chef's knife." },
+                { fr: "Le hachoir", en: "Cleaver", ex: "Use a cleaver for bones." },
+                { fr: "Le couteau à désosser", en: "Boning knife", ex: "Boning knife is flexible." },
+                { fr: "La scie à viande", en: "Butcher's saw", ex: "Cut with the butcher's saw." }
             ]
         };
 
-        const LISTENING = [
-            { audio: "I need two pounds of ground beef.", answer: "🥩", hint: "Ground beef / Beef" },
-            { audio: "The pork tenderloin looks fresh today.", answer: "🐷", hint: "Pork" },
-            { audio: "Do you have lamb chops?", answer: "🐑", hint: "Lamb" }
+        // Activité Orale (Listening)
+        const LISTENING_DATA = [
+            { audio: "I need two pounds of ground beef, please.", answer: "Ground beef", hint: "Viande hachée" },
+            { audio: "The pork tenderloin looks fresh today.", answer: "Pork tenderloin", hint: "Filet mignon de porc" },
+            { audio: "Can you slice this ribeye steak?", answer: "Ribeye", hint: "Entrecôte" },
+            { audio: "Use the boning knife for this piece.", answer: "Boning knife", hint: "Couteau à désosser" }
         ];
 
-        // Logique de base (initialisation minimale pour garder l'app fonctionnelle)
+        // Activité Image & Identification (Nommer l'outil, le morceau ou l'animal)
+        const IMAGE_CHALLENGES = [
+            { img: "https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80", answer: "Ribeye", type: "Morceau", hint: "Entrecôte / Pièce persillée" },
+            { img: "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=400&q=80", answer: "Chef's knife", type: "Outil", hint: "Couteau principal du chef" },
+            { img: "https://images.unsplash.com/photo-1588347818036-558601350947?w=400&q=80", answer: "Beef", type: "Animal / Viande", hint: "Espèce bovine" }
+        ];
+
+        // Écrans et navigation
         document.getElementById('start-btn').addEventListener('click', () => {
             document.getElementById('home-screen').style.display = 'none';
             document.getElementById('game-screen').style.display = 'flex';
+            initGame();
         });
 
         document.getElementById('home-btn').addEventListener('click', () => {
             document.getElementById('game-screen').style.display = 'none';
             document.getElementById('home-screen').style.display = 'flex';
         });
+
+        function addXP(amount) {
+            currentXP += amount;
+            document.getElementById('xp-display').textContent = `${currentXP} XP`;
+            
+            // Calcul de la barre de progression (Seuil de niveau simple tous les 30 XP)
+            let level = Math.floor(currentXP / 30) + 1;
+            let progressInLevel = currentXP % 30;
+            let percent = (progressInLevel / 30) * 100;
+            
+            document.getElementById('lvl-name').textContent = `Niveau ${level} · Professionnel`;
+            document.getElementById('level-progress-text').textContent = `${progressInLevel} / 30 XP`;
+            document.getElementById('progress-fill').style.width = `${percent}%`;
+        }
+
+        function initGame() {
+            renderMenus();
+            loadFlashcards("Viandes & Animaux");
+        }
+
+        function renderMenus() {
+            const modeMenu = document.getElementById('mode-menu');
+            modeMenu.innerHTML = `
+                <button class="menu-btn active" onclick="switchMode('flashcards', this)">📚 Flashcards</button>
+                <button class="menu-btn" onclick="switchMode('quiz', this)">✍️ Quiz Traduction</button>
+                <button class="menu-btn" onclick="switchMode('listening', this)">🎧 Compréhension Orale</button>
+                <button class="menu-btn" onclick="switchMode('image', this)">🖼️ Nommer l'image</button>
+            `;
+
+            const themeMenu = document.getElementById('theme-menu');
+            themeMenu.innerHTML = Object.keys(DATABASE).map(theme => 
+                `<button class="menu-btn" onclick="changeTheme('${theme}', this)">${theme}</button>`
+            ).join('');
+        }
+
+        function switchMode(mode, btn) {
+            document.querySelectorAll('#mode-menu .menu-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            if (mode === 'flashcards') loadFlashcards("Viandes & Animaux");
+            if (mode === 'quiz') loadQuiz("Viandes & Animaux");
+            if (mode === 'listening') loadListening();
+            if (mode === 'image') loadImageChallenge();
+        }
+
+        function changeTheme(theme, btn) {
+            document.querySelectorAll('#theme-menu .menu-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            loadFlashcards(theme);
+        }
+
+        // Module Flashcards
+        let currentCardIdx = 0;
+        function loadFlashcards(theme) {
+            const data = DATABASE[theme];
+            currentCardIdx = 0;
+            
+            const renderCard = () => {
+                const item = data[currentCardIdx];
+                document.getElementById('game-area').innerHTML = `
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px; text-transform:uppercase;">${theme}</div>
+                    <div class="flashcard flashcard-front" id="card" onclick="flipCard('${item.en}', '${item.ex}')">
+                        <span class="card-label">Français</span>
+                        <div class="card-word">${item.fr}</div>
+                        <span style="font-size:0.75rem; color:#94a3b8; margin-top:12px;">👆 Touchez pour voir l'anglais</span>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-icon" onclick="prevCard('${theme}')">⬅️</button>
+                        <button class="btn-next" onclick="nextCard('${theme}')">Suivant</button>
+                    </div>
+                `;
+            };
+            renderCard();
+            window.nextCard = (t) => { currentCardIdx = (currentCardIdx + 1) % DATABASE[t].length; renderCard(); addXP(1); };
+            window.prevCard = (t) => { currentCardIdx = (currentCardIdx - 1 + DATABASE[t].length) % DATABASE[t].length; renderCard(); };
+            window.flipCard = (en, ex) => {
+                const card = document.getElementById('card');
+                card.classList.toggle('flashcard-back');
+                card.innerHTML = `
+                    <span class="card-label">Anglais (English)</span>
+                    <div class="card-word">${en}</div>
+                    <div class="card-example">"${ex}"</div>
+                `;
+            };
+        }
+
+        // Module Quiz
+        let quizIdx = 0;
+        function loadQuiz(theme) {
+            const data = DATABASE[theme];
+            quizIdx = 0;
+            
+            const renderQ = () => {
+                if (quizIdx >= data.length) quizIdx = 0;
+                const item = data[quizIdx];
+                
+                // Générer des choix aléatoires
+                let options = [item.en];
+                while(options.length < 4) {
+                    let randItem = data[Math.floor(Math.random() * data.length)];
+                    if(!options.includes(randItem.en)) options.push(randItem.en);
+                }
+                options.sort(() => Math.random() - 0.5);
+
+                document.getElementById('game-area').innerHTML = `
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:12px;">QUIZ TRADUCTION (${quizIdx + 1}/${data.length})</div>
+                    <div class="quiz-word">${item.fr}</div>
+                    <div class="quiz-options">
+                        ${options.map(opt => `<button class="quiz-btn" onclick="checkQuiz('${opt}', '${item.en}', '${theme}')">${opt}</button>`).join('')}
+                    </div>
+                    <div id="quiz-feedback"></div>
+                `;
+            };
+            renderQ();
+
+            window.checkQuiz = (selected, correct, theme) => {
+                const buttons = document.querySelectorAll('.quiz-btn');
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    if(btn.textContent === correct) btn.classList.add('correct');
+                    if(btn.textContent === selected && selected !== correct) btn.classList.add('wrong');
+                });
+
+                const fb = document.getElementById('quiz-feedback');
+                if(selected === correct) {
+                    fb.innerHTML = `<div class="feedback success">✨ Excellent ! Bonne traduction.</div>`;
+                    addXP(XP_PER_SUCCESS);
+                } else {
+                    fb.innerHTML = `<div class="feedback error">❌ Erreur. La bonne réponse était : ${correct}</div>`;
+                }
+
+                setTimeout(() => { quizIdx++; renderQ(); }, 1600);
+            };
+        }
+
+        // Module Orale (Listening)
+        let listenIdx = 0;
+        function loadListening() {
+            listenIdx = 0;
+            const renderL = () => {
+                if (listenIdx >= LISTENING_DATA.length) listenIdx = 0;
+                const item = LISTENING_DATA[listenIdx];
+
+                document.getElementById('game-area').innerHTML = `
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px;">COMPRÉHENSION ORALE</div>
+                    <div class="audio-container">
+                        <p class="audio-instruction">Écoutez l'énoncé professionnel et retrouvez le terme clé :</p>
+                        <button class="audio-btn" onclick="speakAudio('${item.audio}')">🔊</button>
+                        <p style="font-size: 0.8rem; color:#64748b; margin-top:8px;">(Touchez le haut-parleur)</p>
+                    </div>
+                    <input type="text" id="listen-input" class="identification-input" placeholder="Écrivez le terme en anglais...">
+                    <button class="btn-action" onclick="checkListening('${item.answer}')">Valider</button>
+                    <div id="listen-feedback"></div>
+                `;
+            };
+            renderL();
+
+            window.speakAudio = (text) => {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'en-US';
+                    utterance.rate = 0.9;
+                    window.speechSynthesis.speak(utterance);
+                }
+            };
+
+            window.checkListening = (correctAnswer) => {
+                const userVal = document.getElementById('listen-input').value.trim().toLowerCase();
+                const fb = document.getElementById('listen-feedback');
+                if(userVal === correctAnswer.toLowerCase()) {
+                    fb.innerHTML = `<div class="feedback success">🎯 Parfait ! C'est exact.</div>`;
+                    addXP(XP_PER_SUCCESS);
+                    setTimeout(() => { listenIdx++; renderL(); }, 1400);
+                } else {
+                    fb.innerHTML = `<div class="feedback error">❌ Presque ! Réponse attendue : ${correctAnswer}</div>`;
+                }
+            };
+        }
+
+        // Module Image & Nommage Précis (Outil, Morceau, Animal)
+        let imgIdx = 0;
+        function loadImageChallenge() {
+            imgIdx = 0;
+            const renderImg = () => {
+                if (imgIdx >= IMAGE_CHALLENGES.length) imgIdx = 0;
+                const item = IMAGE_CHALLENGES[imgIdx];
+
+                document.getElementById('game-area').innerHTML = `
+                    <div style="font-size:0.75rem; color:#64748b; font-weight:700; margin-bottom:8px;">IDENTIFICATION VISUELLE (${item.type})</div>
+                    <img src="${item.img}" class="img-preview" alt="Visuel boucherie">
+                    <p style="font-size:0.8rem; color:#475569; margin-bottom:10px;">Indice : <em>${item.hint}</em></p>
+                    <input type="text" id="img-input" class="identification-input" placeholder="Nommez en anglais (ex: Ribeye)">
+                    <button class="btn-action" onclick="checkImageAnswer('${item.answer}')">Vérifier</button>
+                    <div id="img-feedback"></div>
+                `;
+            };
+            renderImg();
+
+            window.checkImageAnswer = (correct) => {
+                const val = document.getElementById('img-input').value.trim().toLowerCase();
+                const fb = document.getElementById('img-feedback');
+                if(val === correct.toLowerCase()) {
+                    fb.innerHTML = `<div class="feedback success">🌟 Bravo ! C'est le bon terme.</div>`;
+                    addXP(XP_PER_SUCCESS);
+                    setTimeout(() => { imgIdx++; renderImg(); }, 1400);
+                } else {
+                    fb.innerHTML = `<div class="feedback error">❌ Faux. Le terme exact est : ${correct}</div>`;
+                }
+            };
+        }
     </script>
 </body>
 </html>
